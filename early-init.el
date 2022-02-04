@@ -16,4 +16,10 @@
 (when (boundp 'native-comp-eln-load-path)
   (add-to-list 'native-comp-eln-load-path (in-cache-directory "eln-cache/")))
 
+(add-to-list 'load-path (in-config-directory "lib/packed"))
+(add-to-list 'load-path (in-config-directory "lib/auto-compile"))
+(require 'auto-compile)
+(auto-compile-on-load-mode)
+(auto-compile-on-save-mode)
+
 (setq package-enable-at-startup nil)
