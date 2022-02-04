@@ -1,6 +1,348 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-and-compile
+(eval-and-compile ; borg and use-package
+  (unless (boundp 'user-config-directory)
+    ;; This is not loaded when doing batch compilation.
+    (load-file (expand-file-name "early-init.el" user-emacs-directory)))
   (add-to-list 'load-path (in-config-directory "lib/borg"))
   (require 'borg)
-  (borg-initialize))
+  (borg-initialize)
+  (require 'use-package))
+
+(use-package auto-compile
+  :config
+  (setq auto-compile-display-buffer nil
+	auto-compile-mode-line-counter t
+	auto-compile-source-recreate-deletes-dest t
+	auto-compile-toggle-deletes-nonlib-dest t
+	auto-compile-update-autoloads t))
+
+(use-package bookmark
+  :custom
+  (bookmark-file (in-data-directory "bookmarks")))
+
+(use-package consult
+  :bind (;; C-c bindings (mode-specific-map)
+         ("C-c h" . consult-history)
+         ("C-c m" . consult-mode-command)
+         ("C-c k" . consult-kmacro)
+         ;; C-x bindings (ctl-x-map)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("<help> a" . consult-apropos)            ;; orig. apropos-command
+         ;; M-g bindings (goto-map)
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings (search-map)
+         ("M-s d" . consult-find)
+         ("M-s D" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s m" . consult-multi-occur)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
+
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI. You may want to also
+  ;; enable `consult-preview-at-point-mode` in Embark Collect buffers.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Optionally replace `completing-read-multiple' with an enhanced version.
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  ;; Configure other variables and modes in the :config section,
+  ;; after lazily loading the package.
+  :config
+
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key (kbd "M-."))
+  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (consult-customize
+   consult-theme
+   :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   :preview-key (kbd "M-."))
+
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+  ;; Optionally make narrowing help available in the minibuffer.
+  ;; You may want to use `embark-prefix-help-command' or which-key instead.
+  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  ;; Optionally configure a function which returns the project root directory.
+  ;; There are multiple reasonable alternatives to chose from.
+  (setq consult-project-root-function
+        (lambda ()
+          (when-let (project (project-current))
+            (car (project-roots project))))))
+
+(use-package custom
+  :no-require t
+  :config
+  (setq custom-file (in-config-directory "custom.el"))
+  (when (file-exists-p custom-file)
+    (load custom-file)))
+
+(use-package dash
+  :config (global-dash-fontify-mode 1))
+
+(use-package diff-hl
+  :config
+  (setq diff-hl-draw-borders nil)
+  (global-diff-hl-mode 1)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh t))
+
+(use-package diff-mode
+  :defer t
+  :config
+  (set-face-attribute 'diff-refine-changed nil :extend t)
+  (set-face-attribute 'diff-refine-removed nil :extend t)
+  (set-face-attribute 'diff-refine-added   nil :extend t))
+
+(use-package doom-modeline
+  :config
+  :init (doom-modeline-mode 1))
+
+(use-package doom-themes
+  :config
+  (load-theme 'doom-one t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
+
+(use-package emacs
+  :config
+  ;; Refuse cursor in minibuffer prompt.
+  (setq minibuffer-prompt-properties
+	'(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Filtering M-x commands.
+  (setq read-extended-command-predicate
+	#'command-completion-default-include-p)
+
+  ;; Nil means single space.
+  (setq sentence-end-double-space nil)
+
+  ;; No backups on save.
+  (setq make-backup-files nil)
+
+  ;; No auto save.
+  (setq auto-save-default nil)
+
+  ;; No locks (symlinks starting with ".#").
+  (setq create-lockfiles nil)
+
+  ;; Buffer name only.
+  (setq frame-title-format "%b")
+
+  ;; Permit minibuffer commands while in minibuffer.
+  (setq enable-recursive-minibuffers t))
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("M-." . embark-dwim)
+   ("C-h B" . embark-bindings))
+
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package evil
+  :init
+  (setq evil-want-keybinding nil)
+  (setq evil-respect-visual-line-mode 't)
+  :config
+  (add-hook 'pdf-view-mode-hook
+	    (lambda ()
+	      (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
+  (evil-set-undo-system 'undo-redo)
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+(use-package magit
+  :defer t
+  :commands (magit-add-section-hook)
+  :config
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-modules
+                          'magit-insert-stashes
+                          'append))
+
+(use-package marginalia
+  :bind (:map minibuffer-local-map
+	      ("M-A" . marginalia-cycle))
+  :init (marginalia-mode 1))
+
+(use-package mixed-pitch
+  :hook
+  (text-mode . mixed-pitch-mode))
+
+(use-package url
+  :custom
+  (url-configuration-directory (in-data-directory "url/")))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package pdf-tools
+  :config
+  (pdf-loader-install))
+
+(use-package recentf
+  :config
+  (setq recentf-save-file (in-data-directory "recentf")
+	recentf-max-saved-items 1024)
+  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
+  (recentf-mode 1))
+
+(use-package org-id
+  :custom
+  (org-id-locations-file (in-data-directory "org-id-locations")))
+
+(use-package org-roam
+  :demand t
+  :custom
+  (org-roam-directory "~/Documents/Notes")
+  (org-roam-dailies-directory "Daily")
+  (org-roam-db-location (in-data-directory "org-roam.db"))
+  (org-roam-completion-everywhere t)
+  (org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :if-new (file+head "%<%Y-%m-%d %H:%M:%S> ${title}.org" "#+title: ${title}\n")
+      :unnarrowed t)))
+  (org-roam-dailies-capture-templates
+   '(("d" "default" entry
+      "* %<%H:%M:%S> %?"
+      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point)
+         :map org-roam-dailies-map
+         ("Y" . org-roam-dailies-capture-yesterday)
+         ("T" . org-roam-dailies-capture-tomorrow))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map)
+  :config
+  (add-to-list 'load-path (in-config-directory "lib/org-roam/extensions"))
+  (require 'org-roam-dailies)
+  (org-roam-db-autosync-mode))
+
+(use-package rust-mode)
+
+(use-package savehist
+  :config
+  (setq savehist-file (in-data-directory "savehist"))
+  (savehist-mode 1))
+
+(use-package server
+  :config (unless (server-running-p) (server-mode)))
+
+(use-package solaire-mode
+  :config (solaire-global-mode 1))
+
+(use-package transient
+  :config
+  (setq transient-history-file (in-data-directory "transient/history.el")
+	transient-levels-file (in-data-directory "transient/levels.el")
+	transient-values-file (in-data-directory "transient/values.el")))
+
+(use-package vertico
+  :init (vertico-mode 1))
+
+(use-package visual-fill-column
+  :init
+  (defun toggle-soft-wrap ()
+    (interactive)
+    (setq visual-fill-column-center-text t)
+    (visual-line-mode 't)
+    (visual-fill-column-mode 't))
+  :hook (text-mode . toggle-soft-wrap))
+
+(add-hook 'after-init-hook
+          (lambda ()
+            (message "Loading Emacs...done (%.3fs)"
+		     (float-time (time-subtract (current-time)
+						before-init-time))))
+            t)
+
+(use-package which-key
+  :config
+  (which-key-mode))
