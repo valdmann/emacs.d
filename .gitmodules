@@ -46,6 +46,9 @@
 [submodule "f"]
 	path = lib/f
 	url = https://github.com/rejeep/f.el
+[submodule "git-auto-commit-mode"]
+	path = lib/git-auto-commit-mode
+	url = https://github.com/ryuslash/git-auto-commit-mode
 [submodule "libegit2"]
 	path = lib/libegit2
 	url = https://github.com/magit/libegit2

@@ -231,6 +231,8 @@
   :config
   (evil-collection-init))
 
+(use-package git-auto-commit-mode)
+
 (use-package magit
   :defer t
   :commands (magit-add-section-hook)
