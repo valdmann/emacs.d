@@ -67,6 +67,9 @@
 [submodule "mixed-pitch"]
 	path = lib/mixed-pitch
 	url = https://gitlab.com/jabranham/mixed-pitch
+[submodule "nerd-icons"]
+	path = lib/nerd-icons
+	url = https://github.com/rainstormstudio/nerd-icons.el
 [submodule "orderless"]
 	path = lib/orderless
 	url = https://github.com/oantolin/orderless
