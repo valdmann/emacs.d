@@ -37,6 +37,9 @@
 ;; Disable slow resize when changing fonts.
 (setq frame-inhibit-implied-resize t)
 
+;; No warnings.
+(setq warning-minimum-level :error)
+
 ;; Configure GUI before GUI is shown.
 (setq default-frame-alist
       '((menu-bar-lines . 0)
