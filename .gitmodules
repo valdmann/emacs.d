@@ -31,6 +31,9 @@
 [submodule "doom-themes"]
 	path = lib/doom-themes
 	url = https://github.com/doomemacs/themes
+[submodule "ellama"]
+	path = lib/ellama
+	url = https://github.com/s-kostyaev/ellama
 [submodule "emacsql"]
 	path = lib/emacsql
 	url = https://github.com/magit/emacsql
@@ -58,6 +61,9 @@
 [submodule "libegit2"]
 	path = lib/libegit2
 	url = https://github.com/magit/libegit2
+[submodule "llm"]
+	path = lib/llm
+	url = https://github.com/ahyatt/llm
 [submodule "magit"]
 	path = lib/magit
 	url = https://github.com/magit/magit
@@ -85,6 +91,15 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = https://github.com/vedang/pdf-tools
+[submodule "plz"]
+	path = lib/plz
+	url = https://github.com/alphapapa/plz.el
+[submodule "plz-event-source"]
+	path = lib/plz-event-source
+	url = https://github.com/r0man/plz-event-source
+[submodule "plz-media-type"]
+	path = lib/plz-media-type
+	url = https://github.com/r0man/plz-media-type
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode
