@@ -52,6 +52,9 @@
 [submodule "goto-chg"]
 	path = lib/goto-chg
 	url = https://github.com/emacs-evil/goto-chg
+[submodule "gptel"]
+	path = lib/gptel
+	url = https://github.com/karthink/gptel
 [submodule "libegit2"]
 	path = lib/libegit2
 	url = https://github.com/magit/libegit2

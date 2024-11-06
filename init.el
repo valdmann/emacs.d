@@ -249,6 +249,17 @@
 
 (use-package git-auto-commit-mode)
 
+(use-package gptel
+  :custom
+  (gptel-model 'llama3.1:latest)
+  :config
+  (setq gptel-backend
+	(gptel-make-ollama "Ollama"
+	  :host "localhost:11434"
+	  :stream t
+	  :models '(llama3.1:latest
+		    llama3.2:latest))))
+
 (use-package magit
   :defer t
   :commands (magit-add-section-hook)
