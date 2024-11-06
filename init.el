@@ -163,6 +163,9 @@
   (set-face-attribute 'diff-refine-removed nil :extend t)
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
+(use-package display-line-numbers
+  :hook (prog-mode . display-line-numbers-mode))
+
 (use-package doom-modeline
   :config
   :init (doom-modeline-mode 1))
