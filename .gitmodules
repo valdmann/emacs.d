@@ -19,6 +19,9 @@
 [submodule "consult"]
 	path = lib/consult
 	url = https://github.com/minad/consult
+[submodule "corfu"]
+	path = lib/corfu
+	url = https://github.com/minad/corfu
 [submodule "dash"]
 	path = lib/dash
 	url = https://github.com/magnars/dash.el
