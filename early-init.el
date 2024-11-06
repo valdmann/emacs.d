@@ -50,7 +50,7 @@
         (undecorated . t)
         (drag-internal-border . 1)
         (internal-border-width . 5)
-        (font . "Noto Sans Mono-12")))
+        (font . "Iosevka Light-12")))
 
 ;; Use only the buffer name as the title of the frame.
 (setq frame-title-format "%b")
