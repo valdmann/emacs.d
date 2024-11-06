@@ -353,6 +353,16 @@
 	transient-levels-file (in-data-directory "transient/levels.el")
 	transient-values-file (in-data-directory "transient/values.el")))
 
+(use-package treesit
+  :mode (("\\.tsx\\'" . tsx-ts-mode))
+  :config
+  (setq treesit-language-source-alist
+	'((c "https://github.com/tree-sitter/tree-sitter-c" "v0.23.1")
+	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")))
+  (setq major-mode-remap-alist
+	'((c-mode . c-ts-mode)
+	  (c++-mode . c++-ts-mode))))
+
 (use-package vertico
   :init (vertico-mode 1))
 
