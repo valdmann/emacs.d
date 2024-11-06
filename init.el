@@ -178,6 +178,8 @@
 
 (use-package emacs
   :custom
+  ;; Disable Ispell completion function.
+  (text-mode-ispell-word-completion nil)
   ;; Filtering M-x commands.
   (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Nil means single space.
