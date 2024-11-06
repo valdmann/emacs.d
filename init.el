@@ -177,33 +177,26 @@
   (doom-themes-org-config))
 
 (use-package emacs
+  :custom
+  ;; Filtering M-x commands.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Nil means single space.
+  (sentence-end-double-space nil)
+  ;; No backups on save.
+  (make-backup-files nil)
+  ;; No auto save.
+  (auto-save-default nil)
+  ;; No locks (symlinks starting with ".#").
+  (create-lockfiles nil)
+  ;; Buffer name only.
+  (frame-title-format "%b")
+  ;; Permit minibuffer commands while in minibuffer.
+  (enable-recursive-minibuffers t)
   :config
   ;; Refuse cursor in minibuffer prompt.
   (setq minibuffer-prompt-properties
 	'(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-  ;; Filtering M-x commands.
-  (setq read-extended-command-predicate
-	#'command-completion-default-include-p)
-
-  ;; Nil means single space.
-  (setq sentence-end-double-space nil)
-
-  ;; No backups on save.
-  (setq make-backup-files nil)
-
-  ;; No auto save.
-  (setq auto-save-default nil)
-
-  ;; No locks (symlinks starting with ".#").
-  (setq create-lockfiles nil)
-
-  ;; Buffer name only.
-  (setq frame-title-format "%b")
-
-  ;; Permit minibuffer commands while in minibuffer.
-  (setq enable-recursive-minibuffers t))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
 (use-package embark
   :bind
