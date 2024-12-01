@@ -140,6 +140,10 @@
   ;; (setq consult-project-function nil)
   )
 
+(use-package corfu
+  :init
+  (global-corfu-mode))
+
 (use-package custom
   :no-require t
   :config
@@ -197,6 +201,8 @@
   (frame-title-format "%b")
   ;; Permit minibuffer commands while in minibuffer.
   (enable-recursive-minibuffers t)
+  ;; Longer lines (default: 70).
+  (fill-column 80)
   :config
   ;; Refuse cursor in minibuffer prompt.
   (setq minibuffer-prompt-properties
