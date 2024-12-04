@@ -338,6 +338,15 @@
   (require 'org-roam-dailies)
   (org-roam-db-autosync-mode))
 
+(use-package poly-erb
+  :config
+  (define-hostmode poly-json-hostmode :mode 'json-ts-mode)
+  (defvar poly-json-root-polymode
+    (pm-polymode :name "json-root" :hostmode 'poly-json-hostmode)
+    "JSON root configuration.")
+  (define-polymode poly-json+erb-mode poly-json-root-polymode
+    :innermodes '(poly-erb-innermode)))
+
 (use-package rust-mode)
 
 (use-package savehist
@@ -362,7 +371,8 @@
   :config
   (setq treesit-language-source-alist
 	'((c "https://github.com/tree-sitter/tree-sitter-c" "v0.23.1")
-	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")))
+	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")
+	  (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")))
   (setq major-mode-remap-alist
 	'((c-mode . c-ts-mode)
 	  (c++-mode . c++-ts-mode))))
