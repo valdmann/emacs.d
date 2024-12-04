@@ -124,6 +124,9 @@
 [submodule "use-package"]
 	path = lib/use-package
 	url = https://github.com/jwiegley/use-package
+[submodule "vagrant-tramp"]
+	path = lib/vagrant-tramp
+	url = https://github.com/dougm/vagrant-tramp
 [submodule "vertico"]
 	path = lib/vertico
 	url = https://github.com/minad/vertico

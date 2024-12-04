@@ -367,6 +367,8 @@
 	'((c-mode . c-ts-mode)
 	  (c++-mode . c++-ts-mode))))
 
+(use-package vagrant-tramp)
+
 (use-package vertico
   :init (vertico-mode 1))
 
