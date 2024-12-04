@@ -103,6 +103,12 @@
 [submodule "plz-media-type"]
 	path = lib/plz-media-type
 	url = https://github.com/r0man/plz-media-type
+[submodule "poly-erb"]
+	path = lib/poly-erb
+	url = https://github.com/polymode/poly-erb.git
+[submodule "polymode"]
+	path = lib/polymode
+	url = https://github.com/polymode/polymode
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode
