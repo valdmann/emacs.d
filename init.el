@@ -251,6 +251,12 @@
   :config
   (evil-collection-init))
 
+(use-package find-file
+  :bind
+  (:map evil-normal-state-map
+	("C-w E" . ff-find-other-file)
+	("C-w e" . ff-find-other-file-other-window)))
+
 (use-package git-auto-commit-mode)
 
 (use-package gptel
