@@ -185,6 +185,8 @@
 
 (use-package emacs
   :custom
+  ;; Use TAB for autocomplete
+  (tab-always-indent 'complete)
   ;; Disable Ispell completion function.
   (text-mode-ispell-word-completion nil)
   ;; Filtering M-x commands.
