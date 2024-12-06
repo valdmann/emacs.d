@@ -209,7 +209,9 @@
   ;; Refuse cursor in minibuffer prompt.
   (setq minibuffer-prompt-properties
 	'(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  :init
+  (column-number-mode))
 
 (use-package embark
   :bind
@@ -290,26 +292,11 @@
   :hook
   (text-mode . mixed-pitch-mode))
 
-(use-package url
-  :custom
-  (url-configuration-directory (in-data-directory "url/")))
-
 (use-package orderless
   :init
   (setq completion-styles '(orderless)
 	completion-category-defaults nil
 	completion-category-overrides '((file (styles partial-completion)))))
-
-(use-package pdf-tools
-  :config
-  (pdf-loader-install))
-
-(use-package recentf
-  :config
-  (setq recentf-save-file (in-data-directory "recentf")
-	recentf-max-saved-items 1024)
-  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
-  (recentf-mode 1))
 
 (use-package org-id
   :custom
@@ -346,6 +333,10 @@
   (require 'org-roam-dailies)
   (org-roam-db-autosync-mode))
 
+(use-package pdf-tools
+  :config
+  (pdf-loader-install))
+
 (use-package poly-erb
   :config
   (define-hostmode poly-json-hostmode :mode 'json-ts-mode)
@@ -354,6 +345,13 @@
     "JSON root configuration.")
   (define-polymode poly-json+erb-mode poly-json-root-polymode
     :innermodes '(poly-erb-innermode)))
+
+(use-package recentf
+  :config
+  (setq recentf-save-file (in-data-directory "recentf")
+	recentf-max-saved-items 1024)
+  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
+  (recentf-mode 1))
 
 (use-package rust-mode)
 
@@ -384,6 +382,10 @@
   (setq major-mode-remap-alist
 	'((c-mode . c-ts-mode)
 	  (c++-mode . c++-ts-mode))))
+
+(use-package url
+  :custom
+  (url-configuration-directory (in-data-directory "url/")))
 
 (use-package vagrant-tramp)
 
