@@ -394,8 +394,6 @@
   :custom
   (url-configuration-directory (in-data-directory "url/")))
 
-(use-package vagrant-tramp)
-
 (use-package vertico
   :init (vertico-mode 1))
 
