@@ -183,6 +183,10 @@
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
+(use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs '(ruby-base-mode "solargraph" "stdio")))
+
 (use-package emacs
   :custom
   ;; Use TAB for autocomplete
