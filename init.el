@@ -346,6 +346,10 @@
   (define-polymode poly-json+erb-mode poly-json-root-polymode
     :innermodes '(poly-erb-innermode)))
 
+(use-package protobuf-mode
+  :load-path "lib/protobuf-mode"
+  :mode "\\.proto\\'")
+
 (use-package recentf
   :config
   (setq recentf-save-file (in-data-directory "recentf")
