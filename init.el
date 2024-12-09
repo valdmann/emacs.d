@@ -188,6 +188,9 @@
   (add-to-list 'eglot-server-programs '(ruby-base-mode "solargraph" "stdio")))
 
 (use-package emacs
+  :bind
+  (("C-<mouse-1>" . xref-find-definitions-at-mouse)
+   ("C-<mouse-3>" . evil-jump-backward))
   :custom
   ;; Use TAB for autocomplete
   (tab-always-indent 'complete)
