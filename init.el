@@ -382,10 +382,13 @@
   (setq treesit-language-source-alist
 	'((c "https://github.com/tree-sitter/tree-sitter-c" "v0.23.1")
 	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")
-	  (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")))
+	  (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")
+	  (ruby "https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1")
+	  (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")))
   (setq major-mode-remap-alist
 	'((c-mode . c-ts-mode)
-	  (c++-mode . c++-ts-mode))))
+	  (c++-mode . c++-ts-mode)
+	  (ruby-mode . ruby-ts-mode))))
 
 (use-package url
   :custom
