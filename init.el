@@ -74,7 +74,13 @@
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+         ("M-r" . consult-history)                 ;; orig. previous-matching-history-element
+	 ;; Evil bindings
+	 :map evil-normal-state-map
+         ("/" . consult-line)
+         ("*" . consult-line-dwim)
+         ("C-u /" . consult-line-multi)
+         ("C-u *" . consult-line-multi-dwim))
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
@@ -138,7 +144,14 @@
   ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
   ;;;; 5. No project support
   ;; (setq consult-project-function nil)
-  )
+
+  (defun consult-line-dwim ()
+    (interactive)
+    (consult-line (thing-at-point 'symbol)))
+
+  (defun consult-line-multi-dwim ()
+    (interactive)
+    (consult-line-multi 't (thing-at-point 'symbol))))
 
 (use-package corfu
   :init
