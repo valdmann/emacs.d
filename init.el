@@ -374,7 +374,7 @@
   :config
   (setq recentf-save-file (in-data-directory "recentf")
 	recentf-max-saved-items 1024)
-  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
+  (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:")
   (recentf-mode 1))
 
 (use-package rust-mode)
@@ -389,6 +389,10 @@
 
 (use-package solaire-mode
   :config (solaire-global-mode 1))
+
+(use-package tramp
+  :custom
+  (tramp-use-ssh-controlmaster-options nil))
 
 (use-package transient
   :config
