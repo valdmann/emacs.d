@@ -297,6 +297,10 @@
 (use-package magit
   :defer t
   :commands (magit-add-section-hook)
+  :bind
+  (:map evil-normal-state-map
+	("g m m" . magit)
+	("g m b" . magit-blame))
   :config
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
