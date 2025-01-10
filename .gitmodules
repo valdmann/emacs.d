@@ -46,6 +46,9 @@
 [submodule "evil"]
 	path = lib/evil
 	url = https://github.com/emacs-evil/evil
+[submodule "evil-args"]
+	path = lib/evil-args
+	url = https://github.com/wcsmith/evil-args
 [submodule "evil-collection"]
 	path = lib/evil-collection
 	url = https://github.com/emacs-evil/evil-collection

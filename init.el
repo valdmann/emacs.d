@@ -270,6 +270,18 @@
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
 
+(use-package evil-args
+  :bind (:map evil-inner-text-objects-map
+         ("a" . 'evil-inner-arg)
+         :map evil-outer-text-objects-map
+         ("a" . 'evil-outer-arg)
+         :map evil-normal-state-map
+         ("L" . 'evil-forward-arg)
+         ("H" . 'evil-backward-arg)
+         :map evil-motion-state-map
+         ("L" . 'evil-forward-arg)
+         ("H" . 'evil-backward-arg)))
+
 (use-package evil-collection
   :after evil
   :config
