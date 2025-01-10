@@ -12,10 +12,10 @@
 (use-package auto-compile
   :config
   (setq auto-compile-display-buffer nil
-	auto-compile-mode-line-counter t
-	auto-compile-source-recreate-deletes-dest t
-	auto-compile-toggle-deletes-nonlib-dest t
-	auto-compile-update-autoloads t))
+        auto-compile-mode-line-counter t
+        auto-compile-source-recreate-deletes-dest t
+        auto-compile-toggle-deletes-nonlib-dest t
+        auto-compile-update-autoloads t))
 
 (use-package bookmark
   :custom
@@ -75,8 +75,8 @@
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
          ("M-r" . consult-history)                 ;; orig. previous-matching-history-element
-	 ;; Evil bindings
-	 :map evil-normal-state-map
+         ;; Evil bindings
+         :map evil-normal-state-map
          ("/" . consult-line)
          ("*" . consult-line-dwim)
          ("C-u /" . consult-line-multi)
@@ -225,10 +225,12 @@
   (enable-recursive-minibuffers t)
   ;; Longer lines (default: 70).
   (fill-column 80)
+  ;; Use spaces for indentation
+  (indent-tabs-mode nil)
   :config
   ;; Refuse cursor in minibuffer prompt.
   (setq minibuffer-prompt-properties
-	'(read-only t cursor-intangible t face minibuffer-prompt))
+        '(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   :init
   (column-number-mode))
@@ -265,8 +267,8 @@
   (setq evil-respect-visual-line-mode 't)
   :config
   (add-hook 'pdf-view-mode-hook
-	    (lambda ()
-	      (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
+            (lambda ()
+              (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
 
@@ -290,8 +292,8 @@
 (use-package find-file
   :bind
   (:map evil-normal-state-map
-	("C-w E" . ff-find-other-file)
-	("C-w e" . ff-find-other-file-other-window)))
+        ("C-w E" . ff-find-other-file)
+        ("C-w e" . ff-find-other-file-other-window)))
 
 (use-package git-auto-commit-mode)
 
@@ -300,19 +302,19 @@
   (gptel-model 'llama3.1:latest)
   :config
   (setq gptel-backend
-	(gptel-make-ollama "Ollama"
-	  :host "localhost:11434"
-	  :stream t
-	  :models '(llama3.1:latest
-		    llama3.2:latest))))
+        (gptel-make-ollama "Ollama"
+          :host "localhost:11434"
+          :stream t
+          :models '(llama3.1:latest
+                    llama3.2:latest))))
 
 (use-package magit
   :defer t
   :commands (magit-add-section-hook)
   :bind
   (:map evil-normal-state-map
-	("g m m" . magit)
-	("g m b" . magit-blame))
+        ("g m m" . magit)
+        ("g m b" . magit-blame))
   :config
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
@@ -321,7 +323,7 @@
 
 (use-package marginalia
   :bind (:map minibuffer-local-map
-	      ("M-A" . marginalia-cycle))
+              ("M-A" . marginalia-cycle))
   :init (marginalia-mode 1))
 
 (use-package mixed-pitch
@@ -331,8 +333,8 @@
 (use-package orderless
   :init
   (setq completion-styles '(orderless)
-	completion-category-defaults nil
-	completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package org-id
   :custom
@@ -389,7 +391,7 @@
 (use-package recentf
   :config
   (setq recentf-save-file (in-data-directory "recentf")
-	recentf-max-saved-items 1024)
+        recentf-max-saved-items 1024)
   (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:")
   (recentf-mode 1))
 
@@ -413,22 +415,22 @@
 (use-package transient
   :config
   (setq transient-history-file (in-data-directory "transient/history.el")
-	transient-levels-file (in-data-directory "transient/levels.el")
-	transient-values-file (in-data-directory "transient/values.el")))
+        transient-levels-file (in-data-directory "transient/levels.el")
+        transient-values-file (in-data-directory "transient/values.el")))
 
 (use-package treesit
   :mode (("\\.tsx\\'" . tsx-ts-mode))
   :config
   (setq treesit-language-source-alist
-	'((c "https://github.com/tree-sitter/tree-sitter-c" "v0.23.1")
-	  (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")
-	  (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")
-	  (ruby "https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1")
-	  (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")))
+        '((c "https://github.com/tree-sitter/tree-sitter-c" "v0.23.1")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")
+          (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")
+          (ruby "https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1")
+          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")))
   (setq major-mode-remap-alist
-	'((c-mode . c-ts-mode)
-	  (c++-mode . c++-ts-mode)
-	  (ruby-mode . ruby-ts-mode))))
+        '((c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
+          (ruby-mode . ruby-ts-mode))))
 
 (use-package url
   :custom
@@ -449,8 +451,8 @@
 (add-hook 'after-init-hook
           (lambda ()
             (message "Loading Emacs...done (%.3fs)"
-		     (float-time (time-subtract (current-time)
-						before-init-time))))
+                     (float-time (time-subtract (current-time)
+                                                before-init-time))))
             t)
 
 (use-package which-key
