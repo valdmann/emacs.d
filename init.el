@@ -168,6 +168,13 @@
   (set-face-attribute 'diff-refine-removed nil :extend t)
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
+(use-package dirvish
+  :config
+  (add-to-list 'load-path (in-config-directory "lib/dirvish/extensions"))
+  (setq dirvish-attributes
+        '(subtree-state all-the-icons collapse git-msg vc-state file-time file-size))
+  (dirvish-override-dired-mode))
+
 (use-package display-line-numbers
   :hook (prog-mode . display-line-numbers-mode))
 
