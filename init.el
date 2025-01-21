@@ -19,6 +19,14 @@
         auto-compile-toggle-deletes-nonlib-dest t
         auto-compile-update-autoloads t))
 
+(use-package avy
+  :general
+  (:states '(normal motion)
+   "gc" 'evil-avy-goto-char-timer
+   "gw" 'evil-avy-goto-word-1
+   "gl" 'evil-avy-goto-line
+   ";" 'avy-resume))
+
 (use-package bookmark
   :custom
   (bookmark-file (in-data-directory "bookmarks")))
