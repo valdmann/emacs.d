@@ -179,11 +179,20 @@
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
 (use-package dirvish
+  :general ("C-x d" #'dirvish)
+           ("M-s D" #'dirvish-fd)
+           (:states 'normal
+            :keymaps 'dirvish-mode-map
+            :packages '(dired dirvish)
+            "q" #'dirvish-quit)
+  :init
+  (dirvish-override-dired-mode)
+  :custom
+  (dirvish-attributes
+   '(subtree-state all-the-icons collapse git-msg vc-state file-time file-size))
   :config
   (add-to-list 'load-path (in-config-directory "lib/dirvish/extensions"))
-  (setq dirvish-attributes
-        '(subtree-state all-the-icons collapse git-msg vc-state file-time file-size))
-  (dirvish-override-dired-mode))
+  (require 'dirvish-fd))
 
 (use-package display-line-numbers
   :hook (prog-mode . display-line-numbers-mode))
