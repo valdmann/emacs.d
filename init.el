@@ -181,6 +181,7 @@
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
 (use-package dirvish
+  :load-path "lib/dirvish/extensions"
   :general ("C-x d" #'dirvish)
            ("M-s D" #'dirvish-fd)
            (:states 'normal
@@ -193,7 +194,6 @@
   (dirvish-attributes
    '(subtree-state all-the-icons collapse git-msg vc-state file-time file-size))
   :config
-  (add-to-list 'load-path (in-config-directory "lib/dirvish/extensions"))
   (require 'dirvish-fd))
 
 (use-package display-line-numbers
@@ -204,8 +204,8 @@
   :init (doom-modeline-mode 1))
 
 (use-package doom-themes
+  :load-path "lib/doom-themes/extensions"
   :config
-  (add-to-list 'load-path (in-config-directory "lib/doom-themes/extensions"))
   (require 'doom-themes-ext-visual-bell)
   (require 'doom-themes-ext-org)
   (load-theme 'doom-one t)
@@ -356,6 +356,7 @@
   (org-id-locations-file (in-data-directory "org-id-locations")))
 
 (use-package org-roam
+  :load-path "lib/org-roam/extensions"
   :demand t
   :custom
   (org-roam-directory "~/Documents/Notes")
@@ -382,7 +383,6 @@
   :bind-keymap
   ("C-c n d" . org-roam-dailies-map)
   :config
-  (add-to-list 'load-path (in-config-directory "lib/org-roam/extensions"))
   (require 'org-roam-dailies)
   (org-roam-db-autosync-mode))
 
