@@ -31,6 +31,8 @@
   :custom
   (bookmark-file (in-data-directory "bookmarks")))
 
+(use-package cmake-ts-mode)
+
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings in `mode-specific-map'
@@ -440,6 +442,7 @@
           (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")
           (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")
           (ruby "https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1")
+          (cmake "https://github.com/uyha/tree-sitter-cmake")
           (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")))
   (setq major-mode-remap-alist
         '((c-mode . c-ts-mode)
