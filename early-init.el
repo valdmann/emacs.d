@@ -55,6 +55,17 @@
 (global-hl-line-mode 1)
 (pixel-scroll-precision-mode 1)
 
+;; Load theme before GUI is shown.
+(add-to-list 'load-path (in-config-directory "lib/doom-modeline"))
+(add-to-list 'load-path (in-config-directory "lib/doom-themes"))
+(add-to-list 'load-path (in-config-directory "lib/doom-themes/extensions"))
+(require 'doom-themes)
+(require 'doom-themes-ext-visual-bell)
+(require 'doom-themes-ext-org)
+(load-theme 'doom-one t)
+(doom-themes-visual-bell-config)
+(doom-themes-org-config)
+
 ;; Use only the buffer name as the title of the frame.
 (setq frame-title-format "%b")
 

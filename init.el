@@ -203,15 +203,6 @@
   :config
   :init (doom-modeline-mode 1))
 
-(use-package doom-themes
-  :load-path "lib/doom-themes/extensions"
-  :config
-  (require 'doom-themes-ext-visual-bell)
-  (require 'doom-themes-ext-org)
-  (load-theme 'doom-one t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
-
 (use-package eglot
   :config
   (add-to-list 'eglot-server-programs '(ruby-base-mode "solargraph" "stdio")))
