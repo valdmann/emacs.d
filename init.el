@@ -464,13 +464,16 @@
     (visual-fill-column-mode 't))
   :hook (text-mode . toggle-soft-wrap))
 
+(use-package which-key
+  :config
+  (which-key-mode))
+
+(use-package ws-butler
+  :hook (prog-mode . ws-butler-mode))
+
 (add-hook 'after-init-hook
           (lambda ()
             (message "Loading Emacs...done (%.3fs)"
                      (float-time (time-subtract (current-time)
                                                 before-init-time))))
             t)
-
-(use-package which-key
-  :config
-  (which-key-mode))
