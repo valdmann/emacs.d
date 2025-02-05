@@ -42,15 +42,18 @@
 
 ;; Configure GUI before GUI is shown.
 (setq default-frame-alist
-      '((menu-bar-lines . 0)
-        (tool-bar-lines . 0)
-        (vertical-scroll-bars . nil)
+      '((vertical-scroll-bars . nil)
         (horizontal-scroll-bars . nil)
         (fullscreen . maximized)
         (undecorated . t)
         (drag-internal-border . 1)
         (internal-border-width . 5)
         (font . "Iosevka Light-12")))
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(blink-cursor-mode -1)
+(global-hl-line-mode 1)
+(pixel-scroll-precision-mode 1)
 
 ;; Use only the buffer name as the title of the frame.
 (setq frame-title-format "%b")
