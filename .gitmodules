@@ -124,6 +124,9 @@
 [submodule "polymode"]
 	path = lib/polymode
 	url = https://github.com/polymode/polymode
+[submodule "posframe"]
+	path = lib/posframe
+	url = https://github.com/tumashu/posframe
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = https://github.com/rust-lang/rust-mode
