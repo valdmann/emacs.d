@@ -203,7 +203,9 @@
   (require 'dirvish-fd))
 
 (use-package display-line-numbers
-  :hook (prog-mode . display-line-numbers-mode))
+  :hook (prog-mode . display-line-numbers-mode)
+  :custom
+  (display-line-numbers-width-start 't))
 
 (use-package doom-modeline
   :config
