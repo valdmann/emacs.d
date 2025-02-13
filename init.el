@@ -31,7 +31,13 @@
   :custom
   (bookmark-file (in-data-directory "bookmarks")))
 
-(use-package cmake-ts-mode)
+(use-package c-ts-mode
+  :custom
+  (c-ts-mode-indent-offset 4))
+
+(use-package cmake-ts-mode
+  :custom
+  (cmake-ts-mode-indent-offset 4))
 
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
