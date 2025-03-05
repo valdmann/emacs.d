@@ -211,6 +211,13 @@
   :config
   :init (doom-modeline-mode 1))
 
+(use-package indent-bars
+  :hook (prog-mode . indent-bars-mode)
+  :config
+  (when (version< emacs-version "30")
+    (setq indent-bars-prefer-character t))
+  (require 'indent-bars-ts))
+
 (use-package eglot
   :config
   (add-to-list 'eglot-server-programs '(ruby-base-mode "solargraph" "stdio")))

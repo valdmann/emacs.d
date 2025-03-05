@@ -73,6 +73,9 @@
 [submodule "gptel"]
 	path = lib/gptel
 	url = https://github.com/karthink/gptel
+[submodule "indent-bars"]
+	path = lib/indent-bars
+	url = https://github.com/jdtsmith/indent-bars
 [submodule "libegit2"]
 	path = lib/libegit2
 	url = https://github.com/magit/libegit2
