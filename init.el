@@ -337,6 +337,7 @@
         ("g m m" . magit)
         ("g m b" . magit-blame))
   :config
+  (require 'all-the-icons)
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
