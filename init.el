@@ -450,6 +450,7 @@
           (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")
           (ruby "https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1")
           (cmake "https://github.com/uyha/tree-sitter-cmake")
+          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
           (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")))
   (setq major-mode-remap-alist
         '((c-mode . c-ts-mode)
