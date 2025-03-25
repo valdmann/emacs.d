@@ -480,6 +480,8 @@
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
 
+(use-package yaml-ts-mode)
+
 (add-hook 'after-init-hook
           (lambda ()
             (message "Loading Emacs...done (%.3fs)"
