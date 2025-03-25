@@ -1,4 +1,9 @@
+*.elc
 eln-cache
-url
+elpa/
+projects
 session.*
+tramp
+transient/
 tree-sitter/
+url
