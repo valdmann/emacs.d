@@ -4,6 +4,7 @@
   (unless (boundp 'user-config-directory)
     ;; This is not loaded when doing batch compilation.
     (load-file (expand-file-name "early-init.el" user-emacs-directory)))
+  (add-to-list 'load-path user-config-directory)
   (add-to-list 'load-path (in-config-directory "lib/borg"))
   (add-to-list 'load-path (in-config-directory "lib/general.el"))
   (require 'borg)
