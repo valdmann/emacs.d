@@ -209,7 +209,15 @@
   (display-line-numbers-width-start 't))
 
 (use-package doom-modeline
-  :config
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-except-project)
+  (doom-modeline-column-zero-based nil)
+  (doom-modeline-percent-position '(-3 "%o"))
+  (doom-modeline-enable-word-count t)
+  (doom-modeline-continuous-word-count-modes '(markdown-mode org-mode))
+  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-total-line-number t)
+  (doom-modeline-vcs-max-length 32)
   :init (doom-modeline-mode 1))
 
 (use-package indent-bars
