@@ -454,17 +454,21 @@
   :mode (("\\.tsx\\'" . tsx-ts-mode))
   :config
   (setq treesit-language-source-alist
-        '((c "https://github.com/tree-sitter/tree-sitter-c" "v0.23.1")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.1")
-          (json "https://github.com/tree-sitter/tree-sitter-json" "v0.24.8")
-          (ruby "https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1")
+        '((c "https://github.com/tree-sitter/tree-sitter-c")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
           (cmake "https://github.com/uyha/tree-sitter-cmake")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0")))
+          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
   (setq major-mode-remap-alist
         '((c-mode . c-ts-mode)
           (c++-mode . c++-ts-mode)
-          (ruby-mode . ruby-ts-mode))))
+          (ruby-mode . ruby-ts-mode)))
+  (dolist (grammar treesit-language-source-alist)
+    (let ((lang (car grammar)))
+      (unless (treesit-language-available-p lang)
+        (treesit-install-language-grammar lang)))))
 
 (use-package url
   :custom
