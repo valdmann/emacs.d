@@ -54,6 +54,7 @@
 (blink-cursor-mode -1)
 (global-hl-line-mode 1)
 (pixel-scroll-precision-mode 1)
+(xterm-mouse-mode 1)
 
 ;; Load theme before GUI is shown.
 (add-to-list 'load-path (in-config-directory "lib/doom-modeline"))
