@@ -130,6 +130,9 @@
 	path = lib/markdown-mode
 	url = https://github.com/jrblevin/markdown-mode
 	branch = master
+[submodule "minuet"]
+	path = lib/minuet
+	url = https://github.com/milanglacier/minuet-ai.el
 [submodule "mixed-pitch"]
 	path = lib/mixed-pitch
 	url = https://gitlab.com/jabranham/mixed-pitch
