@@ -1,24 +1,6 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-and-compile ; borg and use-package
-  (unless (boundp 'user-config-directory)
-    ;; This is not loaded when doing batch compilation.
-    (load-file (expand-file-name "early-init.el" user-emacs-directory)))
-  (add-to-list 'load-path user-config-directory)
-  (add-to-list 'load-path (in-config-directory "lib/borg"))
-  (add-to-list 'load-path (in-config-directory "lib/general.el"))
-  (require 'borg)
-  (borg-initialize)
-  (require 'general)
-  (require 'use-package))
-
-(use-package auto-compile
-  :config
-  (setq auto-compile-display-buffer nil
-        auto-compile-mode-line-counter t
-        auto-compile-source-recreate-deletes-dest t
-        auto-compile-toggle-deletes-nonlib-dest t
-        auto-compile-update-autoloads t))
+(use-package all-the-icons)
 
 (use-package avy
   :general
@@ -27,10 +9,6 @@
    "gw" 'evil-avy-goto-word-1
    "gl" 'evil-avy-goto-line
    ";" 'avy-resume))
-
-(use-package bookmark
-  :custom
-  (bookmark-file (in-data-directory "bookmarks")))
 
 (use-package c-ts-mode
   :custom
@@ -164,13 +142,6 @@
   :init
   (global-corfu-mode))
 
-(use-package custom
-  :no-require t
-  :config
-  (setq custom-file (in-config-directory "custom.el"))
-  (when (file-exists-p custom-file)
-    (load custom-file)))
-
 (use-package dash
   :config (global-dash-fontify-mode 1))
 
@@ -188,7 +159,6 @@
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
 (use-package dirvish
-  :load-path "lib/dirvish/extensions"
   :general ("C-x d" #'dirvish)
            ("M-s D" #'dirvish-fd)
            (:states 'normal
@@ -209,6 +179,7 @@
   (display-line-numbers-width-start 't))
 
 (use-package doom-modeline
+  :vc (:url "https://github.com/seagle0128/doom-modeline" :rev newest)
   :custom
   (doom-modeline-buffer-file-name-style 'truncate-except-project)
   (doom-modeline-column-zero-based nil)
@@ -250,8 +221,6 @@
   (auto-save-default nil)
   ;; No locks (symlinks starting with ".#").
   (create-lockfiles nil)
-  ;; Buffer name only.
-  (frame-title-format "%b")
   ;; Permit minibuffer commands while in minibuffer.
   (enable-recursive-minibuffers t)
   ;; Longer lines (default: 70).
@@ -262,9 +231,7 @@
   ;; Refuse cursor in minibuffer prompt.
   (setq minibuffer-prompt-properties
         '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-  :init
-  (column-number-mode))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
 
 (use-package embark
   :bind
@@ -410,17 +377,11 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package org-id
-  :custom
-  (org-id-locations-file (in-data-directory "org-id-locations")))
-
 (use-package org-roam
-  :load-path "lib/org-roam/extensions"
   :demand t
   :custom
   (org-roam-directory "~/Documents/Notes")
   (org-roam-dailies-directory "Daily")
-  (org-roam-db-location (in-data-directory "org-roam.db"))
   (org-roam-completion-everywhere t)
   (org-roam-capture-templates
    '(("d" "default" plain
@@ -459,21 +420,20 @@
     :innermodes '(poly-erb-innermode)))
 
 (use-package protobuf-mode
-  :load-path "lib/protobuf-mode"
   :mode "\\.proto\\'")
 
 (use-package recentf
+  :custom
+  (recentf-max-saved-items 1024)
   :config
-  (setq recentf-save-file (in-data-directory "recentf")
-        recentf-max-saved-items 1024)
   (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:")
+  (run-at-time nil (* 5 60) 'recentf-save-list)
   (recentf-mode 1))
 
 (use-package rust-mode)
 
 (use-package savehist
   :config
-  (setq savehist-file (in-data-directory "savehist"))
   (savehist-mode 1))
 
 (use-package server
@@ -486,13 +446,8 @@
   :custom
   (tramp-use-ssh-controlmaster-options nil))
 
-(use-package transient
-  :config
-  (setq transient-history-file (in-data-directory "transient/history.el")
-        transient-levels-file (in-data-directory "transient/levels.el")
-        transient-values-file (in-data-directory "transient/values.el")))
-
 (use-package treesit
+  :ensure nil
   :mode (("\\.tsx\\'" . tsx-ts-mode))
   :config
   (setq treesit-language-source-alist
@@ -511,10 +466,6 @@
     (let ((lang (car grammar)))
       (unless (treesit-language-available-p lang)
         (treesit-install-language-grammar lang)))))
-
-(use-package url
-  :custom
-  (url-configuration-directory (in-data-directory "url/")))
 
 (use-package vertico
   :init (vertico-mode 1))
@@ -535,7 +486,8 @@
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
 
-(use-package yaml-ts-mode)
+(use-package yaml-ts-mode
+  :load-path "lisp/")
 
 (add-hook 'after-init-hook
           (lambda ()

@@ -15,30 +15,12 @@
 (dolist (directory (list user-data-directory user-cache-directory))
   (unless (file-exists-p directory)
     (make-directory directory)))
-(when (fboundp 'startup-redirect-eln-cache)
-  (startup-redirect-eln-cache (in-cache-directory "eln-cache/")))
-(setq auto-save-list-file-prefix (in-data-directory "auto-save-list/"))
 
 ;; Don't load outdated bytecode.
 (setq load-prefer-newer t)
 
-;; Compile to bytecode automatically.
-(add-to-list 'load-path (in-config-directory "lib/compat"))
-(add-to-list 'load-path (in-config-directory "lib/packed"))
-(add-to-list 'load-path (in-config-directory "lib/auto-compile"))
-(require 'auto-compile)
-(auto-compile-on-load-mode)
-(auto-compile-on-save-mode)
-
-;; Disable built-in package manager.
-(setq package-archives nil)
-(setq package-enable-at-startup nil)
-
 ;; Disable slow resize when changing fonts.
 (setq frame-inhibit-implied-resize t)
-
-;; No warnings.
-(setq warning-minimum-level :error)
 
 ;; Configure GUI before GUI is shown.
 (setq default-frame-alist
@@ -55,17 +37,7 @@
 (global-hl-line-mode 1)
 (pixel-scroll-precision-mode 1)
 (xterm-mouse-mode 1)
-
-;; Load theme before GUI is shown.
-(add-to-list 'load-path (in-config-directory "lib/doom-modeline"))
-(add-to-list 'load-path (in-config-directory "lib/doom-themes"))
-(add-to-list 'load-path (in-config-directory "lib/doom-themes/extensions"))
-(require 'doom-themes)
-(require 'doom-themes-ext-visual-bell)
-(require 'doom-themes-ext-org)
-(load-theme 'doom-one t)
-(doom-themes-visual-bell-config)
-(doom-themes-org-config)
+(column-number-mode)
 
 ;; Use only the buffer name as the title of the frame.
 (setq frame-title-format "%b")
@@ -78,3 +50,47 @@
 ;; Yes/no -> Y/n.
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Suppress warnings from native compiler.
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Don't let customize write to init.el!
+(setq custom-file (in-config-directory "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;; Set up package manager.
+(require 'package)
+(setq package-archives
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+(package-initialize)
+
+;; Install missing packages by default.
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; Enable general in init.el.
+(use-package general
+  :vc (:url "https://github.com/noctuid/general.el" :rev newest))
+
+;; Compile to bytecode automatically.
+(use-package auto-compile
+  :config
+  (setq auto-compile-display-buffer nil
+        auto-compile-mode-line-counter t
+        auto-compile-source-recreate-deletes-dest t
+        auto-compile-toggle-deletes-nonlib-dest t
+        auto-compile-update-autoloads t)
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode))
+
+;; Load theme before GUI is shown.
+(use-package doom-themes
+  :vc (:url "https://github.com/doomemacs/themes" :rev newest)
+  :config
+  (require 'doom-themes-ext-visual-bell "extensions/doom-themes-ext-visual-bell.el")
+  (require 'doom-themes-ext-org "extensions/doom-themes-ext-org.el")
+  (load-theme 'doom-one t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
