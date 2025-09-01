@@ -388,6 +388,10 @@
   (run-at-time nil (* 5 60) 'recentf-save-list)
   (recentf-mode 1))
 
+(use-package review-captions
+  :load-path "lisp/"
+  :bind (("C-c c" . review-captions)))
+
 (use-package rust-mode)
 
 (use-package savehist
