@@ -305,6 +305,8 @@
           :models '(llama3.1:latest
                     llama3.2:latest))))
 
+(use-package lua-mode)
+
 (use-package magit
   :defer t
   :commands (magit-add-section-hook)
