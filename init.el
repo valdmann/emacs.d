@@ -227,11 +227,16 @@
   (fill-column 80)
   ;; Use spaces for indentation
   (indent-tabs-mode nil)
-  :config
   ;; Refuse cursor in minibuffer prompt.
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+  (minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
+  :hook
+  ((minibuffer-setup-hook . cursor-intangible-mode)
+   (emacs-lisp-mode-hook . (lambda () (setq-local lisp-indent-function
+                                                  #'emacs-lisp-indent-function)))))
+
+(use-package emacs-lisp-indent-function
+  :load-path "lisp/"
+  :autoload emacs-lisp-indent-function)
 
 (use-package embark
   :bind
