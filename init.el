@@ -453,6 +453,9 @@
   :hook (text-mode . toggle-soft-wrap))
 
 (use-package which-key
+  :custom
+  (which-key-sort-uppercase-first nil)
+  (which-key-sort-order 'which-key-key-order-alpha)
   :config
   (which-key-mode))
 
