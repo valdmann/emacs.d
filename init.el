@@ -334,6 +334,8 @@
               ("M-A" . marginalia-cycle))
   :init (marginalia-mode 1))
 
+(use-package markdown-mode)
+
 (use-package mixed-pitch
   :hook
   (text-mode . mixed-pitch-mode))
