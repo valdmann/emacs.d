@@ -5,10 +5,9 @@
 (use-package avy
   :general
   (:states '(normal motion)
-   "gc" 'evil-avy-goto-char-timer
-   "gw" 'evil-avy-goto-word-1
-   "gl" 'evil-avy-goto-line
-   ";" 'avy-resume))
+   "gc" '("go to char" . evil-avy-goto-char-timer)
+   "gw" '("go to word" . evil-avy-goto-word-1)
+   "gl" '("go to line" . evil-avy-goto-line)))
 
 (use-package c-ts-mode
   :custom
