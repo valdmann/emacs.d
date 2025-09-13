@@ -443,13 +443,14 @@
   :init (vertico-mode 1))
 
 (use-package visual-fill-column
+  :custom
+  (visual-fill-column-center-text t)
   :init
-  (defun toggle-soft-wrap ()
+  (defun soft-wrap-mode ()
     (interactive)
-    (setq visual-fill-column-center-text t)
-    (visual-line-mode 't)
-    (visual-fill-column-mode 't))
-  :hook (text-mode . toggle-soft-wrap))
+    (visual-line-mode 'toggle)
+    (visual-fill-column-mode 'toggle))
+  :hook (text-mode . soft-wrap-mode))
 
 (use-package which-key
   :custom
