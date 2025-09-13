@@ -3,7 +3,7 @@
 (require 'dash)
 (require 'transient)
 
-(defconst revcap-image-extensions '("png" "webp"))
+(defconst revcap-image-extensions '("png" "jpg" "webp"))
 (defconst revcap-caption-extension "txt")
 (defconst revcap-marked-file-name "MARKED")
 
@@ -30,6 +30,9 @@
 
 (defvar revcap-marked-dirty nil
   "Indicates the in-memory state may have diverged from disk.")
+
+(defvar revcap-exclude-uncaptioned nil
+  "If true, ignore images without existing caption files. Otherwise, create missing caption files.")
 
 (defun revcap-reset ()
   "Reset global state."
@@ -106,8 +109,10 @@
 (defun revcap-scan (dir)
   "Return sorted list of images found in DIR."
   (let* ((imgs (directory-files dir t revcap-image-regexp))
-         (imgs (--filter (file-exists-p (revcap-corresponding-caption-name it))
-                         imgs)))
+         (imgs (if revcap-exclude-uncaptioned
+                   (--filter (file-exists-p (revcap-corresponding-caption-name it))
+                             imgs)
+                 imgs)))
     (revcap-natural-sort imgs)))
 
 (defun revcap-corresponding-image-candidates (file)
@@ -139,6 +144,7 @@
   (let* ((caption-file (revcap-caption))
          (caption-buffer (get-file-buffer caption-file)))
     (when (and caption-buffer
+               (file-exists-p caption-file)
                (not (buffer-modified-p caption-buffer)))
       (with-current-buffer caption-buffer
           (revert-buffer :ignore-auto :noconfirm)))
