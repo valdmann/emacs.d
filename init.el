@@ -197,6 +197,12 @@
     (setq indent-bars-prefer-character t))
   (require 'indent-bars-ts))
 
+(use-package easy-kill
+  :bind
+  ([remap kill-ring-save] . easy-kill)
+  ([remap mark-sexp] . easy-mark))
+
+
 (use-package eglot
   :config
   (add-to-list 'eglot-server-programs '(ruby-base-mode "solargraph" "stdio")))
