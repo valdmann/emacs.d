@@ -308,14 +308,69 @@
 
 (use-package gptel
   :custom
-  (gptel-model 'llama3.1:latest)
+  (gptel-model 'qwen3-vl-8b-instruct)
+  (gptel-track-media 't)
   :config
   (setq gptel-backend
-        (gptel-make-ollama "Ollama"
-          :host "localhost:11434"
+        (gptel-make-openai "kurk"
+          :host "kurk:3000"
           :stream t
-          :models '(llama3.1:latest
-                    llama3.2:latest))))
+          :protocol "http"
+          :models '(
+                    ;; curl -s kurk:3000/v1/models | jq -r '.data[].id'
+                    (gemma3-12b-it
+                     :capabilities (media)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    gemma3-12b-pt
+                    (gemma3-12b-starshine
+                     :capabilities (media)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (gemma3-27b-it
+                     :capabilities (media)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (gemma3-4b-it
+                     :capabilities (media)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (gpt-oss-20b
+                     :capabilities (tool-use))
+                    (magistral-small-1.2
+                     :capabilities (tool-use))
+                    mistral-nemo-instruct-2407
+                    (mistral-small-3.2
+                     :capabilities (tool-use))
+                    olmo2-32b-instruct
+                    (qwen3-14b
+                     :capabilities (tool-use))
+                    (qwen3-30b-a3b-thinking
+                     :capabilities (tool-use))
+                    (qwen3-32b
+                     :capabilities (tool-use))
+                    (qwen3-4b-instruct
+                     :capabilities (tool-use))
+                    (qwen3-vl-30b-a3b-instruct
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (qwen3-vl-32b-instruct.iq4_xs
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (qwen3-vl-32b-instruct.q3_k_xl
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (qwen3-vl-32b-thinking
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (qwen3-vl-4b-instruct
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (qwen3-vl-8b-instruct
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (qwen3-vl-8b-thinking
+                     :capabilities (media tool-use)
+                     :mime-types ("image/jpeg" "image/png" "image/gif" "image/webp"))
+                    (seed-oss-36b-instruct
+                     :capabilities (tool-use))
+                    ))))
 
 (use-package lua-mode)
 
