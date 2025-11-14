@@ -458,6 +458,20 @@
     (visual-fill-column-mode 'toggle))
   :hook (text-mode . soft-wrap-mode))
 
+(use-package wingman
+  :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
+  :bind
+  ("C-<return>" . wingman-fim)
+  (:map wingman-mode-completion-transient-map
+   ("C-f" . wingman-accept-full)
+   ("C-e" . wingman-accept-line)
+   ("C-w" . wingman-accept-word))
+  :config
+  (setq wingman-auto-fim nil)
+  (setq wingman-llama-endpoint "http://kurk:3000/upstream/qwen3-coder-30b-a3b/infill")
+  :init
+  (global-wingman-mode))
+
 (use-package which-key
   :custom
   (which-key-sort-uppercase-first nil)
