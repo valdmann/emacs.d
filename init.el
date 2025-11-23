@@ -1,5 +1,11 @@
 ;; -*- lexical-binding: t -*-
 
+(defun jv/completion-at-point ()
+  (interactive)
+  (if (bound-and-true-p wingman-mode)
+      (wingman-fim)
+    (completion-at-point)))
+
 (use-package all-the-icons)
 
 (use-package avy
@@ -8,6 +14,14 @@
    "gc" '("go to char" . evil-avy-goto-char-timer)
    "gw" '("go to word" . evil-avy-goto-word-1)
    "gl" '("go to line" . evil-avy-goto-line)))
+
+(use-package cape
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-emoji)
+  )
 
 (use-package c-ts-mode
   :custom
@@ -158,12 +172,13 @@
 (use-package emacs
   :bind
   (("C-<mouse-1>" . xref-find-definitions-at-mouse)
-   ("C-<mouse-3>" . evil-jump-backward))
+   ("C-<mouse-3>" . evil-jump-backward)
+   ("C-<return>" . jv/completion-at-point))
   :custom
   ;; Use TAB for autocomplete
-  (tab-always-indent 'complete)
+  (tab-always-indent t)
   ;; Disable Ispell completion function.
-  (text-mode-ispell-word-completion nil)
+  ;; (text-mode-ispell-word-completion nil)
   ;; Filtering M-x commands.
   (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Nil means single space.
@@ -185,7 +200,9 @@
   :hook
   ((minibuffer-setup-hook . cursor-intangible-mode)
    (emacs-lisp-mode-hook . (lambda () (setq-local lisp-indent-function
-                                                  #'emacs-lisp-indent-function)))))
+                                                  #'emacs-lisp-indent-function))))
+  :init
+  (global-completion-preview-mode 1))
 
 (use-package emacs-lisp-indent-function
   :load-path "lisp/"
@@ -464,16 +481,16 @@
 (use-package wingman
   :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
   :bind
-  ("C-<return>" . wingman-fim)
+  ("C-c w" . global-wingman-mode)
   (:map wingman-mode-completion-transient-map
    ("C-f" . wingman-accept-full)
    ("C-e" . wingman-accept-line)
    ("C-w" . wingman-accept-word))
+  :custom
+  (wingman-prefix-key nil)
   :config
   (setq wingman-auto-fim nil)
-  (setq wingman-llama-endpoint "http://kurk:3000/upstream/qwen3-coder-30b-a3b/infill")
-  :init
-  (global-wingman-mode))
+  (setq wingman-llama-endpoint "http://kurk:3000/upstream/qwen3-coder-30b-a3b/infill"))
 
 (use-package which-key
   :custom
