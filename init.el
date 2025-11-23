@@ -1,5 +1,9 @@
 ;; -*- lexical-binding: t -*-
 
+(define-prefix-command 'spc-map)
+(define-prefix-command 'spc-search-map)
+(keymap-set spc-map "s" '("search" . spc-search-map))
+
 (defun jv/completion-at-point ()
   (interactive)
   (if (bound-and-true-p wingman-mode)
@@ -159,6 +163,11 @@
     (setq indent-bars-prefer-character t))
   (require 'indent-bars-ts))
 
+(use-package eat
+  :bind
+  (:map spc-map
+   ("t" . eat)))
+
 (use-package easy-kill
   :bind
   ([remap kill-ring-save] . easy-kill)
@@ -242,6 +251,8 @@
   (add-hook 'pdf-view-mode-hook
             (lambda ()
               (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
+  (evil-define-key '(emacs normal visual) 'global (kbd "SPC") 'spc-map)
+  (evil-define-key '(insert visual motion) 'global (kbd "C-SPC") 'spc-map)
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
 
@@ -272,8 +283,11 @@
 (use-package git-auto-commit-mode)
 
 (use-package gptel
+  :bind
+  (:map spc-map
+   ("g" . gptel))
   :custom
-  (gptel-model 'qwen3-vl-8b-instruct)
+  (gptel-model 'qwen3-coder-30b-a3b)
   (gptel-track-media 't)
   :config
   (setq gptel-backend
@@ -496,6 +510,7 @@
   :custom
   (which-key-sort-uppercase-first nil)
   (which-key-sort-order 'which-key-key-order-alpha)
+  (which-key-idle-delay 0.5)
   :config
   (which-key-mode))
 
