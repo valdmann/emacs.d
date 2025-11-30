@@ -163,6 +163,9 @@
     (setq indent-bars-prefer-character t))
   (require 'indent-bars-ts))
 
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode))
+
 (use-package eat
   :bind
   (:map spc-map
