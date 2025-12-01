@@ -1,8 +1,10 @@
 ;; -*- lexical-binding: t -*-
 
 (define-prefix-command 'spc-map)
-(define-prefix-command 'spc-search-map)
-(keymap-set spc-map "s" '("search" . spc-search-map))
+;; (define-prefix-command 'spc-search-map)
+;; (define-prefix-command 'spc-org-map)
+;; (keymap-set spc-map "s" '("search" . spc-search-map))
+;; (keymap-set spc-map "o" '("org" . spc-org-map))
 
 (defun jv/completion-at-point ()
   (interactive)
@@ -167,9 +169,9 @@
   :hook (emacs-startup . global-jinx-mode))
 
 (use-package eat
-  :bind
-  (:map spc-map
-   ("t" . eat)))
+  :general
+  (:keymaps 'spc-map
+   "t" '("terminal" . eat)))
 
 (use-package easy-kill
   :bind
@@ -209,6 +211,8 @@
   (indent-tabs-mode nil)
   ;; Refuse cursor in minibuffer prompt.
   (minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
+  ;; Use English month and day-of-week names in org-mode.
+  (system-time-locale "C")
   :hook
   ((minibuffer-setup-hook . cursor-intangible-mode)
    (emacs-lisp-mode-hook . (lambda () (setq-local lisp-indent-function
@@ -286,17 +290,21 @@
 (use-package git-auto-commit-mode)
 
 (use-package gptel
-  :bind
-  (:map spc-map
-   ("g" . gptel))
+  :general
+  (:keymaps 'spc-map
+   "g b" 'gptel
+   "g m" 'gptel-menu
+   "g s" 'gptel-send)
   :custom
-  (gptel-model 'qwen3-coder-30b-a3b)
+  (gptel-model 'qwen3-vl-8b-instruct)
   (gptel-track-media 't)
+  (gptel-default-mode 'org-mode)
   :config
+  (require 'gptel-integrations)
   (setq gptel-backend
         (gptel-make-openai "kurk"
           :host "kurk:3000"
-          :stream t
+          :stream nil
           :protocol "http"
           :models '(
                     ;; curl -s kurk:3000/v1/models | jq -r '.data[].id'
@@ -378,6 +386,16 @@
 
 (use-package markdown-mode)
 
+(use-package mcp
+  :vc (:url "https://github.com/lizqwerscott/mcp.el" :rev newest)
+  :after gptel
+  :custom
+  (mcp-hub-servers
+   `(("web_fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+     ("web_search" . (:url ,(format "https://mcp.exa.ai/mcp?tools=web_search_exa&exaApiKey=%s" (getenv "EXA_API_KEY"))))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
+
 (use-package mixed-pitch
   :hook
   (text-mode . mixed-pitch-mode))
@@ -388,34 +406,48 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package org-roam
-  :demand t
+(use-package org
+  :general
+  (:keymaps 'spc-map
+   "l" 'org-store-link
+   "a" 'org-agenda
+   "c" 'org-capture)
   :custom
-  (org-roam-directory "~/Documents/Notes")
-  (org-roam-dailies-directory "Daily")
-  (org-roam-completion-everywhere t)
-  (org-roam-capture-templates
-   '(("d" "default" plain
-      "%?"
-      :if-new (file+head "%<%Y-%m-%d %H:%M:%S> ${title}.org" "#+title: ${title}\n")
-      :unnarrowed t)))
-  (org-roam-dailies-capture-templates
-   '(("d" "default" entry
-      "* %<%H:%M:%S> %?"
-      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert)
-         :map org-mode-map
-         ("C-M-i" . completion-at-point)
-         :map org-roam-dailies-map
-         ("Y" . org-roam-dailies-capture-yesterday)
-         ("T" . org-roam-dailies-capture-tomorrow))
-  :bind-keymap
-  ("C-c n d" . org-roam-dailies-map)
-  :config
-  (require 'org-roam-dailies)
-  (org-roam-db-autosync-mode))
+  (org-timestamp-formats ("%Y-%m-%d" . "%Y-%m-%d %H:%M"))
+  (org-directory "~/Notes")
+  (org-capture-templates
+   '(("j" "Journal" entry (file+olp+datetree "journal.org")
+      "* %U\n%i%?")))
+  )
+
+;; (use-package org-roam
+;;   :demand t
+;;   :custom
+;;   (org-roam-directory "~/Documents/Notes")
+;;   (org-roam-dailies-directory "Daily")
+;;   (org-roam-completion-everywhere t)
+;;   (org-roam-capture-templates
+;;    '(("d" "default" plain
+;;       "%?"
+;;       :if-new (file+head "%<%Y-%m-%d %H:%M:%S> ${title}.org" "#+title: ${title}\n")
+;;       :unnarrowed t)))
+;;   (org-roam-dailies-capture-templates
+;;    '(("d" "default" entry
+;;       "* %<%H:%M:%S> %?"
+;;       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+;;   :bind (("C-c n l" . org-roam-buffer-toggle)
+;;          ("C-c n f" . org-roam-node-find)
+;;          ("C-c n i" . org-roam-node-insert)
+;;          :map org-mode-map
+;;          ("C-M-i" . completion-at-point)
+;;          :map org-roam-dailies-map
+;;          ("Y" . org-roam-dailies-capture-yesterday)
+;;          ("T" . org-roam-dailies-capture-tomorrow))
+;;   :bind-keymap
+;;   ("C-c n d" . org-roam-dailies-map)
+;;   :config
+;;   (require 'org-roam-dailies)
+;;   (org-roam-db-autosync-mode))
 
 (use-package pdf-tools
   :config
@@ -497,17 +529,17 @@
 
 (use-package wingman
   :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
-  :bind
-  ("C-c w" . global-wingman-mode)
-  (:map wingman-mode-completion-transient-map
-   ("C-f" . wingman-accept-full)
-   ("C-e" . wingman-accept-line)
-   ("C-w" . wingman-accept-word))
+  :general
+  (:keymaps 'spc-map
+  "w" '("wingman" . global-wingman-mode))
+  (:keymaps 'wingman-mode-completion-transient-map
+   "f" 'wingman-accept-full
+   "l" 'wingman-accept-line
+   "w" 'wingman-accept-word)
   :custom
   (wingman-prefix-key nil)
-  :config
-  (setq wingman-auto-fim nil)
-  (setq wingman-llama-endpoint "http://kurk:3000/upstream/qwen3-coder-30b-a3b/infill"))
+  (wingman-auto-fim nil)
+  (wingman-llama-endpoint "http://kurk:3000/upstream/qwen3-coder-30b-a3b/infill"))
 
 (use-package which-key
   :custom
