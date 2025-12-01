@@ -178,6 +178,11 @@
   ([remap kill-ring-save] . easy-kill)
   ([remap mark-sexp] . easy-mark))
 
+(use-package ediff
+  :custom
+  (ediff-keep-variants nil)
+  (ediff-split-window-function 'split-window-horizontally)
+  (ediff-window-setup-function 'ediff-setup-windows-plain))
 
 (use-package eglot
   :config
