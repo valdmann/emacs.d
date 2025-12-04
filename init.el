@@ -398,8 +398,7 @@
   (mcp-hub-servers
    `(("web_fetch" . (:command "uvx" :args ("mcp-server-fetch")))
      ("web_search" . (:url ,(format "https://mcp.exa.ai/mcp?tools=web_search_exa&exaApiKey=%s" (getenv "EXA_API_KEY"))))))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
+  :config (require 'mcp-hub))
 
 (use-package mixed-pitch
   :hook
