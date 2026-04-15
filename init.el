@@ -12,6 +12,34 @@
       (wingman-fim)
     (completion-at-point)))
 
+(use-package agent-shell
+  :after evil
+  :config
+
+  (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
+  (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
+
+  (add-hook 'diff-mode-hook
+	    (lambda ()
+	      (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+		(evil-emacs-state))))
+
+  (defun jv/agent-shell-dot-subdir (subdir)
+  (let* ((cwd (string-remove-suffix "/" (agent-shell-cwd)))
+         (sanitized (replace-regexp-in-string "/" "-" (string-remove-prefix "/" cwd))))
+    (expand-file-name subdir (locate-user-emacs-file (concat "agent-shell/" sanitized)))))
+  (setopt agent-shell-dot-subdir-function #'jv/agent-shell-dot-subdir)
+
+  (when (string= (system-name) "juris-work-laptop")
+    (setopt agent-shell-anthropic-claude-environment
+            (agent-shell-make-environment-variables
+             "CLAUDE_CODE_USE_VERTEX" "1"
+             "CLOUD_ML_REGION" "global"
+             "ANTHROPIC_MODEL" "claude-opus-4-6"
+             "ANTHROPIC_VERTEX_PROJECT_ID" "ss-shared-ai-code-assist"))
+    (setopt agent-shell-preferred-agent-config
+            (agent-shell-anthropic-make-claude-code-config))))
+
 (use-package all-the-icons)
 
 (use-package avy
@@ -417,6 +445,9 @@
 
 (use-package server
   :config (unless (server-running-p) (server-mode)))
+
+(use-package shell-maker
+  :vc (:url "https://github.com/xenodium/shell-maker" :rev newest))
 
 (use-package solaire-mode
   :config (solaire-global-mode 1))
