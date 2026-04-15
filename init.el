@@ -491,6 +491,11 @@
     (visual-fill-column-mode 'toggle))
   :hook (text-mode . soft-wrap-mode))
 
+(use-package welcome
+  :load-path "lisp/"
+  :config
+  (setq initial-buffer-choice #'welcome-buffer))
+
 (use-package wingman
   :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
   :general
