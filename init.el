@@ -33,6 +33,9 @@
   :custom
   (c-ts-mode-indent-offset 4))
 
+(use-package clipetty
+  :hook (after-init . global-clipetty-mode))
+
 (use-package cmake-ts-mode
   :custom
   (cmake-ts-mode-indent-offset 4))
