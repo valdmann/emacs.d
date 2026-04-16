@@ -161,6 +161,13 @@
   (doom-modeline-vcs-max-length 32)
   :init (doom-modeline-mode 1))
 
+(use-package dumb-jump
+  :custom
+  (dumb-jump-prefer-searcher 'rg)
+  (xref-show-definitions-function #'consult-xref)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
 (use-package indent-bars
   :hook (prog-mode . indent-bars-mode)
   :config
