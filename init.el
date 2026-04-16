@@ -422,6 +422,12 @@
   (define-polymode poly-json+erb-mode poly-json-root-polymode
     :innermodes '(poly-erb-innermode)))
 
+(use-package project-x
+  :vc (:url "https://github.com/vmargb/project-x" :rev newest)
+  :after project
+  :config
+  (add-hook 'project-find-functions 'project-x-try-local 90))
+
 (use-package protobuf-mode
   :mode "\\.proto\\'")
 
