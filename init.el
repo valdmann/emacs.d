@@ -1,10 +1,10 @@
 ;; -*- lexical-binding: t -*-
 
 (define-prefix-command 'spc-map)
-;; (define-prefix-command 'spc-search-map)
-;; (define-prefix-command 'spc-org-map)
-;; (keymap-set spc-map "s" '("search" . spc-search-map))
-;; (keymap-set spc-map "o" '("org" . spc-org-map))
+(define-prefix-command 'spc-lsp-map)
+(define-prefix-command 'spc-org-map)
+(keymap-set spc-map "l" '("lsp" . spc-lsp-map))
+(keymap-set spc-map "o" '("org" . spc-org-map))
 
 (defun jv/completion-at-point ()
   (interactive)
@@ -41,6 +41,11 @@
             (agent-shell-anthropic-make-claude-code-config))))
 
 (use-package all-the-icons)
+
+(use-package atomic-chrome
+  :vc (:url "https://github.com/KarimAziev/atomic-chrome" :rev newest)
+  :commands (atomic-chrome-start-server)
+  :config (atomic-chrome-start-server))
 
 (use-package avy
   :general
@@ -215,11 +220,6 @@
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode))
 
-(use-package eat
-  :general
-  (:keymaps 'spc-map
-   "t" '("terminal" . eat)))
-
 (use-package easy-kill
   :bind
   ([remap kill-ring-save] . easy-kill)
@@ -233,12 +233,31 @@
 
 (use-package eglot
   :config
-  (add-to-list 'eglot-server-programs '(ruby-base-mode "solargraph" "stdio")))
+  :init
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'python-mode-hook 'eglot-ensure)
+  :general
+  (:keymaps 'spc-lsp-map
+   "d" '("definition" . xref-find-definitions)
+   "r" '("references" . xref-find-references)
+   "h" '("declaration" . eglot-find-declaration)
+   "i" '("implementation" . eglot-find-implementation)
+   "t" '("typedef" . eglot-find-typeDefinition)
+   "f" '("format" . eglot-format)
+   "m" '("rename" . eglot-rename)
+   "a" '("actions" . eglot-code-actions))
+  :config
+  ;; (add-hook 'after-save-hook 'eglot-format)
+  (add-to-list 'eglot-server-programs
+               '(python-base-mode . ("uvx" "--with" "ruff" "--with" "ty" "--from" "rassumfrassum" "rass" "python")))
+  (add-to-list 'eglot-server-programs
+               '(ruby-base-mode . '("solargraph" "stdio"))))
 
 (use-package emacs
   :bind
   (("C-<mouse-1>" . xref-find-definitions-at-mouse)
    ("C-<mouse-3>" . evil-jump-backward)
+   ("C-s" . save-buffer)
    ("C-<return>" . jv/completion-at-point))
   :custom
   ;; Use TAB for autocomplete
@@ -341,6 +360,14 @@
 
 (use-package git-auto-commit-mode)
 
+(use-package ghostel
+  :vc (:url "https://github.com/dakra/ghostel"
+       :lisp-dir "lisp"
+       :rev :newest)
+  :general
+  (:keymaps 'spc-map
+   "t" '("terminal" . ghostel)))
+
 (use-package lua-mode)
 
 (use-package magit
@@ -377,7 +404,7 @@
 
 (use-package org
   :general
-  (:keymaps 'spc-map
+  (:keymaps 'spc-org-map
    "l" 'org-store-link
    "a" 'org-agenda
    "c" 'org-capture)
@@ -474,7 +501,8 @@
 (use-package treesit
   :ensure nil
   :mode (("\\.tsx\\'" . tsx-ts-mode)
-         ("\\.cppm\\'" . c++-ts-mode))
+         ("\\.cppm\\'" . c++-ts-mode)
+         ("\\.ts\\'" . typescript-ts-mode))
   :config
   (setq treesit-language-source-alist
         '((c "https://github.com/tree-sitter/tree-sitter-c")
@@ -524,7 +552,7 @@
   :custom
   (wingman-prefix-key nil)
   (wingman-auto-fim nil)
-  (wingman-llama-endpoint "http://kurk:3000/upstream/qwen3-coder-30b-a3b/infill"))
+  (wingman-llama-endpoint "http://127.0.0.1:3000/upstream/qwen3.6-27b/infill"))
 
 (use-package which-key
   :custom
