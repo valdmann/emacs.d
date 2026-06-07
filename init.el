@@ -40,6 +40,22 @@
     (setopt agent-shell-preferred-agent-config
             (agent-shell-anthropic-make-claude-code-config))))
 
+(defun jv/terminal ()
+  (interactive)
+  (let ((ghostel-buffer-name
+         (format "*ghostel: %s*"
+                 (abbreviate-file-name default-directory))))
+    (call-interactively #'ghostel)))
+
+(defun jv/run-in-new-terminal (program &optional args)
+  (let ((buf (generate-new-buffer (format "*%s*" program))))
+    (pop-to-buffer buf)
+    (ghostel-exec buf program args)))
+
+(defun jv/pi ()
+  (interactive)
+  (jv/run-in-new-terminal "pi"))
+
 (use-package all-the-icons)
 
 (use-package atomic-chrome
@@ -196,7 +212,10 @@
   (doom-modeline-buffer-encoding nil)
   (doom-modeline-total-line-number t)
   (doom-modeline-vcs-max-length 32)
-  :init (doom-modeline-mode 1))
+  :init (doom-modeline-mode 1)
+  :config
+  (add-to-list 'nerd-icons-mode-icon-alist
+               '(ghostel-mode nerd-icons-faicon "nf-fa-terminal" :face nerd-icons-lblue)))
 
 (use-package dtrt-indent
   :vc (:url "https://github.com/jscheid/dtrt-indent" :rev newest)
@@ -353,6 +372,13 @@
   :config
   (evil-collection-init))
 
+(use-package evil-ghostel
+  :vc (:url "https://github.com/dakra/ghostel"
+       :lisp-dir "extensions/evil-ghostel"
+       :rev :newest)
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
+
 (use-package find-file
   :general (:states 'normal
             "C-w e" #'ff-find-other-file
@@ -366,7 +392,8 @@
        :rev :newest)
   :general
   (:keymaps 'spc-map
-   "t" '("terminal" . ghostel)))
+   "t" '("terminal" . jv/terminal)
+   "p" '("pi" . jv/pi)))
 
 (use-package lua-mode)
 
