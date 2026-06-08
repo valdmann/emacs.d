@@ -49,6 +49,10 @@
    "gw" '("go to word" . evil-avy-goto-word-1)
    "gl" '("go to line" . evil-avy-goto-line)))
 
+(use-package blamer
+  :config
+  (global-blamer-mode 1))
+
 (use-package cape
   :init
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
