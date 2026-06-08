@@ -193,6 +193,11 @@
   (doom-modeline-vcs-max-length 32)
   :init (doom-modeline-mode 1))
 
+(use-package dtrt-indent
+  :vc (:url "https://github.com/jscheid/dtrt-indent" :rev newest)
+  :config
+  (dtrt-indent-global-mode 1))
+
 (use-package dumb-jump
   :custom
   (dumb-jump-prefer-searcher 'rg)
