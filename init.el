@@ -478,6 +478,7 @@
           (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
           (cmake "https://github.com/uyha/tree-sitter-cmake")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+          (groovy "https://github.com/murtaza64/tree-sitter-groovy")
           (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
   (setq major-mode-remap-alist
         '((c-mode . c-ts-mode)
@@ -530,6 +531,9 @@
 
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
+
+(use-package groovy-ts-mode
+  :load-path "lisp/")
 
 (use-package yaml-ts-mode
   :load-path "lisp/")
