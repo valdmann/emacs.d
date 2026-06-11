@@ -40,21 +40,6 @@
     (setopt agent-shell-preferred-agent-config
             (agent-shell-anthropic-make-claude-code-config))))
 
-(defun jv/terminal ()
-  (interactive)
-  (let ((ghostel-buffer-name
-         (format "*ghostel: %s*"
-                 (abbreviate-file-name default-directory))))
-    (call-interactively #'ghostel)))
-
-(defun jv/run-in-new-terminal (program &optional args)
-  (let ((buf (generate-new-buffer (format "*%s*" program))))
-    (pop-to-buffer buf)
-    (ghostel-exec buf program args)))
-
-(defun jv/pi ()
-  (interactive)
-  (jv/run-in-new-terminal "pi"))
 
 (use-package all-the-icons)
 
@@ -397,7 +382,23 @@
   :general
   (:keymaps 'spc-map
    "t" '("terminal" . jv/terminal)
-   "p" '("pi" . jv/pi)))
+   "p" '("pi" . jv/pi))
+  :config
+  (defun jv/terminal ()
+    (interactive)
+    (let ((ghostel-buffer-name
+           (format "*ghostel: %s*"
+                   (abbreviate-file-name default-directory))))
+      (call-interactively #'ghostel)))
+
+  (defun jv/run-in-new-terminal (program &optional args)
+    (let ((buf (generate-new-buffer (format "*%s*" program))))
+      (pop-to-buffer buf)
+      (ghostel-exec buf program args)))
+
+  (defun jv/pi ()
+    (interactive)
+    (jv/run-in-new-terminal "pi")))
 
 (use-package lua-mode)
 
