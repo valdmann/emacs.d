@@ -181,6 +181,10 @@
   (set-face-attribute 'diff-refine-removed nil :extend t)
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
+(use-package dimmer
+  :config
+  (dimmer-mode))
+
 (use-package dirvish
   :general ("C-x d" #'dirvish)
            ("M-s D" #'dirvish-fd)
