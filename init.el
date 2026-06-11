@@ -31,12 +31,6 @@
   (setopt agent-shell-dot-subdir-function #'jv/agent-shell-dot-subdir)
 
   (when (string= (system-name) "juris-work-laptop")
-    (setopt agent-shell-anthropic-claude-environment
-            (agent-shell-make-environment-variables
-             "CLAUDE_CODE_USE_VERTEX" "1"
-             "CLOUD_ML_REGION" "global"
-             "ANTHROPIC_MODEL" "claude-opus-4-6"
-             "ANTHROPIC_VERTEX_PROJECT_ID" "ss-shared-ai-code-assist"))
     (setopt agent-shell-preferred-agent-config
             (agent-shell-anthropic-make-claude-code-config))))
 
