@@ -6,6 +6,47 @@
 (keymap-set spc-map "l" '("lsp" . spc-lsp-map))
 (keymap-set spc-map "o" '("org" . spc-org-map))
 
+(defun jv/buffer-path ()
+  (or (buffer-file-name) (user-error "Buffer is not visiting a file")))
+
+(defun jv/project-buffer-path ()
+  (file-relative-name (jv/buffer-path)
+                      (or (project-root (project-current))
+                          (user-error "Not in a project"))))
+
+(defun jv/kill (str)
+  (kill-new str) (message "%s" str))
+
+(defun jv/kill-location (file)
+  (jv/kill (if (use-region-p)
+               (format "%s:%d-%d" file
+                       (line-number-at-pos (region-beginning))
+                       (line-number-at-pos (region-end)))
+             (format "%s:%d" file (line-number-at-pos)))))
+
+(defun jv/kill-file ()
+  (interactive)
+  (jv/kill (jv/buffer-path)))
+
+(defun jv/kill-project-file ()
+  (interactive)
+  (jv/kill (jv/project-relative-file)))
+
+(defun jv/kill-line ()
+  (interactive)
+  (jv/kill-location (jv/buffer-path)))
+
+(defun jv/kill-project-line ()
+  (interactive)
+  (jv/kill-location (jv/project-relative-file)))
+
+(define-prefix-command 'spc-kill-map)
+(keymap-set spc-map "k" '("kill" . spc-kill-map))
+(keymap-set spc-kill-map "f" '("file (project)" . jv/kill-project-file))
+(keymap-set spc-kill-map "F" '("file (absolute)" . jv/kill-file))
+(keymap-set spc-kill-map "l" '("line (project)" . jv/kill-project-line))
+(keymap-set spc-kill-map "L" '("line (absolute)" . jv/kill-line))
+
 (defun jv/completion-at-point ()
   (interactive)
   (if (bound-and-true-p wingman-mode)
@@ -237,7 +278,6 @@
 (use-package eglot
   :config
   :init
-  (add-hook 'python-mode-hook 'eglot-ensure)
   (add-hook 'python-mode-hook 'eglot-ensure)
   :general
   (:keymaps 'spc-lsp-map
