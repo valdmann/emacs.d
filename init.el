@@ -20,14 +20,14 @@
   (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
 
   (add-hook 'diff-mode-hook
-	    (lambda ()
-	      (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-		(evil-emacs-state))))
+            (lambda ()
+              (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+                (evil-emacs-state))))
 
   (defun jv/agent-shell-dot-subdir (subdir)
-  (let* ((cwd (string-remove-suffix "/" (agent-shell-cwd)))
-         (sanitized (replace-regexp-in-string "/" "-" (string-remove-prefix "/" cwd))))
-    (expand-file-name subdir (locate-user-emacs-file (concat "agent-shell/" sanitized)))))
+    (let* ((cwd (string-remove-suffix "/" (agent-shell-cwd)))
+           (sanitized (replace-regexp-in-string "/" "-" (string-remove-prefix "/" cwd))))
+      (expand-file-name subdir (locate-user-emacs-file (concat "agent-shell/" sanitized)))))
   (setopt agent-shell-dot-subdir-function #'jv/agent-shell-dot-subdir)
 
   (when (string= (system-name) "juris-work-laptop")
@@ -165,12 +165,13 @@
   (dimmer-mode))
 
 (use-package dirvish
-  :general ("C-x d" #'dirvish)
-           ("M-s D" #'dirvish-fd)
-           (:states 'normal
-            :keymaps 'dirvish-mode-map
-            :packages '(dired dirvish)
-            "q" #'dirvish-quit)
+  :general
+  ("C-x d" #'dirvish)
+  ("M-s D" #'dirvish-fd)
+  (:states 'normal
+   :keymaps 'dirvish-mode-map
+   :packages '(dired dirvish)
+   "q" #'dirvish-quit)
   :init
   (dirvish-override-dired-mode)
   :custom
@@ -401,8 +402,8 @@
   :commands (magit-add-section-hook)
   :bind
   (:map evil-normal-state-map
-        ("g m m" . magit)
-        ("g m b" . magit-blame))
+   ("g m m" . magit)
+   ("g m b" . magit-blame))
   :config
   (require 'all-the-icons)
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
@@ -413,7 +414,7 @@
 
 (use-package marginalia
   :bind (:map minibuffer-local-map
-              ("M-A" . marginalia-cycle))
+         ("M-A" . marginalia-cycle))
   :init (marginalia-mode 1))
 
 (use-package markdown-mode)
@@ -570,7 +571,7 @@
   :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
   :general
   (:keymaps 'spc-map
-  "w" '("wingman" . global-wingman-mode))
+   "w" '("wingman" . global-wingman-mode))
   (:keymaps 'wingman-mode-completion-transient-map
    "f" 'wingman-accept-full
    "l" 'wingman-accept-line
@@ -602,4 +603,4 @@
             (message "Loading Emacs...done (%.3fs)"
                      (float-time (time-subtract (current-time)
                                                 before-init-time))))
-            t)
+          t)
