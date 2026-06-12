@@ -30,7 +30,7 @@
 
 (defun jv/kill-project-file ()
   (interactive)
-  (jv/kill (jv/project-relative-file)))
+  (jv/kill (jv/project-buffer-path)))
 
 (defun jv/kill-line ()
   (interactive)
@@ -38,7 +38,7 @@
 
 (defun jv/kill-project-line ()
   (interactive)
-  (jv/kill-location (jv/project-relative-file)))
+  (jv/kill-location (jv/project-buffer-path)))
 
 (define-prefix-command 'spc-kill-map)
 (keymap-set spc-map "k" '("kill" . spc-kill-map))
