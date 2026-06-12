@@ -18,10 +18,11 @@
   (kill-new str) (message "%s" str))
 
 (defun jv/kill-location (file)
-  (jv/kill (if (use-region-p)
-               (format "%s:%d-%d" file
-                       (line-number-at-pos (region-beginning))
-                       (line-number-at-pos (region-end)))
+  (jv/kill (if-let* (((use-region-p))
+                     (beg (line-number-at-pos (region-beginning)))
+                     (end (line-number-at-pos (region-end)))
+                     ((< beg end)))
+               (format "%s:%d-%d" file beg end)
              (format "%s:%d" file (line-number-at-pos)))))
 
 (defun jv/kill-file ()
