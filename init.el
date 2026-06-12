@@ -76,7 +76,6 @@
     (setopt agent-shell-preferred-agent-config
             (agent-shell-anthropic-make-claude-code-config))))
 
-
 (use-package all-the-icons)
 
 (use-package atomic-chrome
@@ -99,13 +98,10 @@
   :init
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  (add-hook 'completion-at-point-functions #'cape-dict)
   (add-hook 'completion-at-point-functions #'cape-emoji)
   )
-
-(use-package c-ts-mode
-  :custom
-  (c-ts-mode-indent-offset 4))
 
 (use-package clipetty
   :hook (after-init . global-clipetty-mode))
@@ -190,6 +186,10 @@
   :init
   (global-corfu-mode))
 
+(use-package c-ts-mode
+  :custom
+  (c-ts-mode-indent-offset 4))
+
 (use-package dash
   :config (global-dash-fontify-mode 1))
 
@@ -259,16 +259,6 @@
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
-(use-package indent-bars
-  :hook (prog-mode . indent-bars-mode)
-  :config
-  (when (version< emacs-version "30")
-    (setq indent-bars-prefer-character t))
-  (require 'indent-bars-ts))
-
-(use-package jinx
-  :hook (emacs-startup . global-jinx-mode))
-
 (use-package easy-kill
   :bind
   ([remap kill-ring-save] . easy-kill)
@@ -311,7 +301,7 @@
   ;; Use TAB for autocomplete
   (tab-always-indent t)
   ;; Disable Ispell completion function.
-  ;; (text-mode-ispell-word-completion nil)
+  (text-mode-ispell-word-completion nil)
   ;; Filtering M-x commands.
   (read-extended-command-predicate #'command-completion-default-include-p)
   ;; Nil means single space.
@@ -413,8 +403,6 @@
             "C-w e" #'ff-find-other-file
             "C-w E" #'ff-find-other-file-other-window))
 
-(use-package git-auto-commit-mode)
-
 (use-package ghostel
   :vc (:url "https://github.com/dakra/ghostel"
        :lisp-dir "lisp"
@@ -439,6 +427,21 @@
   (defun jv/pi ()
     (interactive)
     (jv/run-in-new-terminal "pi")))
+
+(use-package git-auto-commit-mode)
+
+(use-package groovy-ts-mode
+  :load-path "lisp/")
+
+(use-package indent-bars
+  :hook (prog-mode . indent-bars-mode)
+  :config
+  (when (version< emacs-version "30")
+    (setq indent-bars-prefer-character t))
+  (require 'indent-bars-ts))
+
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode))
 
 (use-package lua-mode)
 
@@ -612,6 +615,14 @@
   :config
   (setq initial-buffer-choice #'welcome-buffer))
 
+(use-package which-key
+  :custom
+  (which-key-sort-uppercase-first nil)
+  (which-key-sort-order 'which-key-key-order-alpha)
+  (which-key-idle-delay 0.5)
+  :config
+  (which-key-mode))
+
 (use-package wingman
   :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
   :general
@@ -626,19 +637,8 @@
   (wingman-auto-fim nil)
   (wingman-llama-endpoint "http://127.0.0.1:3000/upstream/qwen3.6-27b/infill"))
 
-(use-package which-key
-  :custom
-  (which-key-sort-uppercase-first nil)
-  (which-key-sort-order 'which-key-key-order-alpha)
-  (which-key-idle-delay 0.5)
-  :config
-  (which-key-mode))
-
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
-
-(use-package groovy-ts-mode
-  :load-path "lisp/")
 
 (use-package yaml-ts-mode
   :load-path "lisp/")
