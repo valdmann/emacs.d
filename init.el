@@ -186,6 +186,10 @@
   (setq consult-narrow-key "<")
   )
 
+(use-package corfu
+  :init
+  (global-corfu-mode))
+
 (use-package dash
   :config (global-dash-fontify-mode 1))
 
