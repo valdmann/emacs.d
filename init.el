@@ -440,6 +440,10 @@
     (setq indent-bars-prefer-character t))
   (require 'indent-bars-ts))
 
+(use-package jinja-ts-mode
+  :load-path "lisp/"
+  :mode "\\.jinja\\'")
+
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode))
 
@@ -587,7 +591,8 @@
           (cmake "https://github.com/uyha/tree-sitter-cmake")
           (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
           (groovy "https://github.com/murtaza64/tree-sitter-groovy")
-          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")))
+          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
+          (jinja "https://github.com/cathaysia/tree-sitter-jinja" "master" "tree-sitter-jinja/src")))
   (setq major-mode-remap-alist
         '((c-mode . c-ts-mode)
           (c++-mode . c++-ts-mode)
