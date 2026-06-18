@@ -6,6 +6,12 @@
 (keymap-set spc-map "l" '("lsp" . spc-lsp-map))
 (keymap-set spc-map "o" '("org" . spc-org-map))
 
+(defun jv/native-recompile ()
+  "Prune eln cache and native recompile everything on `package-user-dir'."
+  (interactive)
+  (native-compile-prune-cache)
+  (native-compile-async package-user-dir 'recursively))
+
 (defun jv/buffer-path ()
   (or (buffer-file-name) (user-error "Buffer is not visiting a file")))
 
