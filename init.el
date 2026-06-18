@@ -578,9 +578,6 @@
 (use-package shell-maker
   :vc (:url "https://github.com/xenodium/shell-maker" :rev newest))
 
-(use-package solaire-mode
-  :hook (after-init . solaire-global-mode))
-
 (use-package tramp
   :defer t
   :init
