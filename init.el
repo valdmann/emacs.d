@@ -56,6 +56,7 @@
 
 (use-package agent-shell
   :after evil
+  :commands (agent-shell)
   :config
 
   (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
@@ -91,8 +92,7 @@
    "gl" '("go to line" . evil-avy-goto-line)))
 
 (use-package blamer
-  :config
-  (global-blamer-mode 1))
+  :hook (after-init . global-blamer-mode))
 
 (use-package cape
   :init
@@ -107,6 +107,7 @@
   :hook (after-init . global-clipetty-mode))
 
 (use-package cmake-ts-mode
+  :mode ("CMakeLists\\.txt\\'" . cmake-ts-mode)
   :custom
   (cmake-ts-mode-indent-offset 4))
 
@@ -187,6 +188,7 @@
   (global-corfu-mode))
 
 (use-package c-ts-mode
+  :defer t
   :custom
   (c-ts-mode-indent-offset 4))
 
@@ -194,9 +196,9 @@
   :config (global-dash-fontify-mode 1))
 
 (use-package diff-hl
+  :hook (after-init . global-diff-hl-mode)
   :config
   (setq diff-hl-draw-borders nil)
-  (global-diff-hl-mode 1)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh t))
 
 (use-package diff-mode
@@ -207,10 +209,10 @@
   (set-face-attribute 'diff-refine-added   nil :extend t))
 
 (use-package dimmer
-  :config
-  (dimmer-mode))
+  :hook (after-init . dimmer-mode))
 
 (use-package dirvish
+  :defer t
   :general
   ("C-x d" #'dirvish)
   ("M-s D" #'dirvish-fd)
@@ -218,13 +220,12 @@
    :keymaps 'dirvish-mode-map
    :packages '(dired dirvish)
    "q" #'dirvish-quit)
-  :init
-  (dirvish-override-dired-mode)
   :custom
   (dirvish-attributes
    '(subtree-state all-the-icons collapse git-msg vc-state file-time file-size))
   :config
-  (require 'dirvish-fd))
+  (require 'dirvish-fd)
+  (dirvish-override-dired-mode))
 
 (use-package display-line-numbers
   :hook (prog-mode . display-line-numbers-mode)
@@ -242,22 +243,22 @@
   (doom-modeline-buffer-encoding nil)
   (doom-modeline-total-line-number t)
   (doom-modeline-vcs-max-length 32)
-  :init (doom-modeline-mode 1)
+  :hook (after-init . doom-modeline-mode)
   :config
   (add-to-list 'nerd-icons-mode-icon-alist
                '(ghostel-mode nerd-icons-faicon "nf-fa-terminal" :face nerd-icons-lblue)))
 
 (use-package dtrt-indent
   :vc (:url "https://github.com/jscheid/dtrt-indent" :rev newest)
-  :config
-  (dtrt-indent-global-mode 1))
+  :hook (after-init . dtrt-indent-global-mode))
 
 (use-package dumb-jump
+  :defer t
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom
   (dumb-jump-prefer-searcher 'rg)
-  (xref-show-definitions-function #'consult-xref)
-  :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+  (xref-show-definitions-function #'consult-xref))
 
 (use-package easy-kill
   :bind
@@ -265,6 +266,7 @@
   ([remap mark-sexp] . easy-mark))
 
 (use-package ediff
+  :defer t
   :custom
   (ediff-keep-variants nil)
   (ediff-split-window-function 'split-window-horizontally)
@@ -364,9 +366,6 @@
   (setq evil-want-keybinding nil)
   (setq evil-respect-visual-line-mode 't)
   :config
-  (add-hook 'pdf-view-mode-hook
-            (lambda ()
-              (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
   (evil-define-key '(emacs normal visual) 'global (kbd "SPC") 'spc-map)
   (evil-define-key '(insert visual motion) 'global (kbd "C-SPC") 'spc-map)
   (evil-set-undo-system 'undo-redo)
@@ -386,10 +385,9 @@
 
 (use-package evil-collection
   :after evil
+  :hook (after-init . evil-collection-init)
   :custom
-  (evil-collection-setup-minibuffer t)
-  :config
-  (evil-collection-init))
+  (evil-collection-setup-minibuffer t))
 
 (use-package evil-ghostel
   :vc (:url "https://github.com/dakra/ghostel"
@@ -428,10 +426,11 @@
     (interactive)
     (jv/run-in-new-terminal "pi")))
 
-(use-package git-auto-commit-mode)
+(use-package git-auto-commit-mode
+  :defer t)
 
-(use-package groovy-ts-mode
-  :load-path "lisp/")
+;; (use-package groovy-ts-mode
+;;   :load-path "lisp/")
 
 (use-package indent-bars
   :hook (prog-mode . indent-bars-mode)
@@ -447,7 +446,8 @@
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode))
 
-(use-package lua-mode)
+(use-package lua-mode
+  :mode ("\\.lua\\'" . lua-mode))
 
 (use-package magit
   :defer t
@@ -469,7 +469,9 @@
          ("M-A" . marginalia-cycle))
   :init (marginalia-mode 1))
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :mode ("\\.md\\'" . markdown-mode)
+  :mode ("\\.markdown\\'" . markdown-mode))
 
 (use-package mixed-pitch
   :hook
@@ -525,10 +527,16 @@
 ;;   (org-roam-db-autosync-mode))
 
 (use-package pdf-tools
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :hook (pdf-view-mode . (lambda ()
+                           (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
   :config
   (pdf-loader-install))
 
 (use-package poly-erb
+  :defer t
+  :mode ("\\.json.erb\\'" . poly-json+erb-mode)
   :config
   (define-hostmode poly-json-hostmode :mode 'json-ts-mode)
   (defvar poly-json-root-polymode
@@ -549,20 +557,20 @@
 (use-package recentf
   :custom
   (recentf-max-saved-items 1024)
+  :hook (after-init . recentf-mode)
   :config
   (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:")
-  (run-at-time nil (* 5 60) 'recentf-save-list)
-  (recentf-mode 1))
+  (run-at-time nil (* 5 60) 'recentf-save-list))
 
 (use-package review-captions
   :load-path "lisp/"
   :bind (("C-c c" . review-captions)))
 
-(use-package rust-mode)
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode))
 
 (use-package savehist
-  :config
-  (savehist-mode 1))
+  :hook (after-init . savehist-mode))
 
 (use-package server
   :config (unless (server-running-p) (server-mode)))
@@ -571,11 +579,12 @@
   :vc (:url "https://github.com/xenodium/shell-maker" :rev newest))
 
 (use-package solaire-mode
-  :config (solaire-global-mode 1))
+  :hook (after-init . solaire-global-mode))
 
 (use-package tramp
-  :custom
-  (tramp-use-ssh-controlmaster-options nil))
+  :defer t
+  :init
+  (setq tramp-use-ssh-controlmaster-options nil))
 
 (use-package treesit
   :ensure nil
@@ -597,10 +606,12 @@
         '((c-mode . c-ts-mode)
           (c++-mode . c++-ts-mode)
           (ruby-mode . ruby-ts-mode)))
-  (dolist (grammar treesit-language-source-alist)
-    (let ((lang (car grammar)))
-      (unless (treesit-language-available-p lang)
-        (treesit-install-language-grammar lang)))))
+  (add-hook 'after-init-hook
+    (lambda ()
+      (dolist (grammar treesit-language-source-alist)
+        (let ((lang (car grammar)))
+          (unless (treesit-language-available-p lang)
+            (treesit-install-language-grammar lang)))))))
 
 (use-package vertico
   :init (vertico-mode 1))
@@ -625,8 +636,7 @@
   (which-key-sort-uppercase-first nil)
   (which-key-sort-order 'which-key-key-order-alpha)
   (which-key-idle-delay 0.5)
-  :config
-  (which-key-mode))
+  :hook (after-init . which-key-mode))
 
 (use-package wingman
   :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
@@ -646,6 +656,7 @@
   :hook (prog-mode . ws-butler-mode))
 
 (use-package yaml-ts-mode
+  :mode ("\\.ya?ml\\'" . yaml-ts-mode)
   :load-path "lisp/")
 
 (add-hook 'after-init-hook
