@@ -74,17 +74,6 @@
 (use-package general
   :vc (:url "https://github.com/noctuid/general.el" :rev newest))
 
-;; Compile to bytecode automatically.
-(use-package auto-compile
-  :config
-  (setq auto-compile-display-buffer nil
-        auto-compile-mode-line-counter t
-        auto-compile-source-recreate-deletes-dest t
-        auto-compile-toggle-deletes-nonlib-dest t
-        auto-compile-update-autoloads t)
-  (auto-compile-on-load-mode)
-  (auto-compile-on-save-mode))
-
 ;; Load theme before GUI is shown.
 (use-package doom-themes
   :vc (:url "https://github.com/doomemacs/themes" :rev newest)
