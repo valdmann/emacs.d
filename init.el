@@ -13,7 +13,9 @@
   (native-compile-async package-user-dir 'recursively))
 
 (defun jv/buffer-path ()
-  (or (buffer-file-name) (user-error "Buffer is not visiting a file")))
+  (or (buffer-file-name)
+      dired-directory
+      (user-error "Buffer is not visiting a file")))
 
 (defun jv/project-buffer-path ()
   (file-relative-name (jv/buffer-path)
