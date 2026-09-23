@@ -2,9 +2,9 @@
 
 (define-prefix-command 'spc-map)
 (define-prefix-command 'spc-lsp-map)
-(define-prefix-command 'spc-org-map)
+(define-prefix-command 'spc-note-map)
 (keymap-set spc-map "l" '("lsp" . spc-lsp-map))
-(keymap-set spc-map "o" '("org" . spc-org-map))
+(keymap-set spc-map "n" '("note" . spc-note-map))
 
 (defun jv/native-recompile ()
   "Prune eln cache and native recompile everything on `package-user-dir'."
@@ -103,9 +103,9 @@
 (use-package cape
   :init
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
   (add-hook 'completion-at-point-functions #'cape-dict)
+  (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-emoji)
   )
 
@@ -200,6 +200,22 @@
 
 (use-package dash
   :config (global-dash-fontify-mode 1))
+
+(use-package denote
+  :hook (dired-mode . denote-dired-mode)
+  :general
+  (:keymaps 'spc-note-map
+   "n" 'denote
+   "r" 'denote-rename-file
+   "l" 'denote-link
+   "b" 'denote-backlinks
+   "d" 'denote-dired
+   "g" 'denote-grep)
+  :custom
+  (denote-directory (expand-file-name "~/Documents/Notes/"))
+  (denote-file-type 'org)
+  :config
+  (denote-rename-buffer-mode 1))
 
 (use-package diff-hl
   :hook (after-init . global-diff-hl-mode)
@@ -306,8 +322,6 @@
    ("C-s" . save-buffer)
    ("C-<return>" . jv/completion-at-point))
   :custom
-  ;; Use TAB for autocomplete
-  (tab-always-indent t)
   ;; Disable Ispell completion function.
   (text-mode-ispell-word-completion nil)
   ;; Filtering M-x commands.
@@ -489,49 +503,6 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package org
-  :general
-  (:keymaps 'spc-org-map
-   "l" 'org-store-link
-   "a" 'org-agenda
-   "c" 'org-capture)
-  :custom
-  (org-timestamp-formats ("%Y-%m-%d" . "%Y-%m-%d %H:%M"))
-  (org-directory "~/Notes")
-  (org-capture-templates
-   '(("j" "Journal" entry (file+olp+datetree "journal.org")
-      "* %U\n%i%?")))
-  )
-
-;; (use-package org-roam
-;;   :demand t
-;;   :custom
-;;   (org-roam-directory "~/Documents/Notes")
-;;   (org-roam-dailies-directory "Daily")
-;;   (org-roam-completion-everywhere t)
-;;   (org-roam-capture-templates
-;;    '(("d" "default" plain
-;;       "%?"
-;;       :if-new (file+head "%<%Y-%m-%d %H:%M:%S> ${title}.org" "#+title: ${title}\n")
-;;       :unnarrowed t)))
-;;   (org-roam-dailies-capture-templates
-;;    '(("d" "default" entry
-;;       "* %<%H:%M:%S> %?"
-;;       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
-;;   :bind (("C-c n l" . org-roam-buffer-toggle)
-;;          ("C-c n f" . org-roam-node-find)
-;;          ("C-c n i" . org-roam-node-insert)
-;;          :map org-mode-map
-;;          ("C-M-i" . completion-at-point)
-;;          :map org-roam-dailies-map
-;;          ("Y" . org-roam-dailies-capture-yesterday)
-;;          ("T" . org-roam-dailies-capture-tomorrow))
-;;   :bind-keymap
-;;   ("C-c n d" . org-roam-dailies-map)
-;;   :config
-;;   (require 'org-roam-dailies)
-;;   (org-roam-db-autosync-mode))
-
 (use-package pdf-tools
   :defer t
   :mode ("\\.pdf\\'" . pdf-view-mode)
@@ -653,7 +624,7 @@
   :custom
   (wingman-prefix-key nil)
   (wingman-auto-fim nil)
-  (wingman-llama-endpoint "http://127.0.0.1:3000/upstream/qwen3.6-27b/infill"))
+  (wingman-llama-endpoint "http://127.0.0.1:3000/upstream/qwen3.8-27b:coding/infill"))
 
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
