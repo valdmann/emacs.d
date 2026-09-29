@@ -215,7 +215,7 @@
    "g" 'denote-grep)
   :custom
   (denote-directory (expand-file-name "~/Documents/Notes/"))
-  (denote-file-type 'org)
+  (denote-file-type 'markdown-yaml)
   :config
   (denote-rename-buffer-mode 1))
 
