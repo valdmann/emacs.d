@@ -211,13 +211,26 @@
    "r" 'denote-rename-file
    "l" 'denote-link
    "b" 'denote-backlinks
-   "d" 'denote-dired
-   "g" 'denote-grep)
+   "d" 'denote-dired)
   :custom
   (denote-directory (expand-file-name "~/Documents/Notes/"))
   (denote-file-type 'markdown-yaml)
   :config
   (denote-rename-buffer-mode 1))
+
+(use-package consult-denote
+  :init
+  (with-eval-after-load 'denote
+    (consult-denote-mode 1))
+  :custom
+  (consult-denote-grep-command #'consult-ripgrep)
+  (consult-denote-find-command #'consult-fd)
+  :general
+  (:keymaps 'spc-note-map
+   "f" 'consult-denote-find
+   "g" 'consult-denote-grep)
+  :config
+  (consult-denote-mode 1))
 
 (use-package diff-hl
   :hook (after-init . global-diff-hl-mode)
