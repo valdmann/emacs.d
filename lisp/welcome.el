@@ -2,11 +2,13 @@
 
 (require 'recentf)
 (require 'project)
+(require 'denote)
 
 (defvar magit-display-buffer-function)
 
 (defvar welcome-recent-projects-limit 5)
 (defvar welcome-recent-files-limit 10)
+(defvar welcome-recent-notes-limit 5)
 
 (defvar-local welcome--padding-overlay nil)
 
@@ -30,6 +32,10 @@ Derived from `recentf-list' matched against known project roots."
         (when (and match (not (member match projects)))
           (push match projects))))
     (nreverse projects)))
+
+(defun welcome--recent-notes ()
+  "Return recently modified Denote notes, newest first."
+  (denote-sort-get-directory-files "" 'last-modified))
 
 (defun welcome--insert-project-entry (path)
   "Insert a project entry with the last directory component highlighted."
@@ -139,6 +145,10 @@ Measurements are taken using window WIN."
           (welcome--insert-project-entry p))
         (insert "\nRecent Files:\n")
         (dolist (f (seq-take recentf-list welcome-recent-files-limit))
+          (welcome--insert-file-entry f project-roots))
+        (insert "\nRecent Notes:\n")
+        (dolist (f (seq-take (welcome--recent-notes)
+                             welcome-recent-notes-limit))
           (welcome--insert-file-entry f project-roots))
         (goto-char (point-min)))
       (welcome-mode)
