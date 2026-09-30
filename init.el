@@ -211,12 +211,29 @@
    "r" 'denote-rename-file
    "l" 'denote-link
    "b" 'denote-backlinks
-   "d" 'denote-dired)
+   "d" 'denote-dired
+   "j" 'jv/jump-to-recent)
   :custom
   (denote-directory (expand-file-name "~/Documents/Notes/"))
   (denote-file-type 'markdown-yaml)
   :config
-  (denote-rename-buffer-mode 1))
+  (denote-rename-buffer-mode 1)
+
+  (defun jv/jump-to-recent ()
+    "Jump to one of the recently modified Denote notes."
+    (interactive)
+    (find-file
+     (consult--read
+      (denote-sort-get-directory-files "" 'last-modified)
+      :prompt "Recent note: "
+      :sort nil
+      :require-match t
+      :category 'file
+      :annotate (lambda (f)
+                  (format "  %s"
+                          (date-relative-format (file-modification-time f))))
+      :state (consult--file-preview)
+      :history 'file-name-history))))
 
 (use-package consult-denote
   :init
