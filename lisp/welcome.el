@@ -26,12 +26,16 @@
 Derived from `recentf-list' matched against known project roots."
   (let ((roots (welcome--project-roots))
         (projects nil))
-    (dolist (f recentf-list)
+    (dolist (f (welcome--recent-files))
       (let* ((abbrev (abbreviate-file-name f))
              (match (cl-find-if (lambda (r) (string-prefix-p r abbrev)) roots)))
         (when (and match (not (member match projects)))
           (push match projects))))
     (nreverse projects)))
+
+(defun welcome--recent-files ()
+  "Return recent files excluding Denote notes."
+  (seq-remove #'denote-file-is-in-denote-directory-p recentf-list))
 
 (defun welcome--recent-notes ()
   "Return recently modified Denote notes, newest first."
@@ -144,7 +148,8 @@ Measurements are taken using window WIN."
                              welcome-recent-projects-limit))
           (welcome--insert-project-entry p))
         (insert "\nRecent Files:\n")
-        (dolist (f (seq-take recentf-list welcome-recent-files-limit))
+        (dolist (f (seq-take (welcome--recent-files)
+                             welcome-recent-files-limit))
           (welcome--insert-file-entry f project-roots))
         (insert "\nRecent Notes:\n")
         (dolist (f (seq-take (welcome--recent-notes)
