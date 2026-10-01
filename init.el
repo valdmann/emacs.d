@@ -56,12 +56,6 @@
 (keymap-set spc-kill-map "l" '("line (project)" . jv/kill-project-line))
 (keymap-set spc-kill-map "L" '("line (absolute)" . jv/kill-line))
 
-(defun jv/completion-at-point ()
-  (interactive)
-  (if (bound-and-true-p wingman-mode)
-      (wingman-fim)
-    (completion-at-point)))
-
 (defun jv/blamer-show-commit ()
   "Visit in Magit the revision that blamer annotates at point."
   (interactive)
@@ -350,7 +344,7 @@
   (("C-<mouse-1>" . xref-find-definitions-at-mouse)
    ("C-<mouse-3>" . evil-jump-backward)
    ("C-s" . save-buffer)
-   ("C-<return>" . jv/completion-at-point))
+   ("C-<return>" . completion-at-point))
   :custom
   ;; Disable Ispell completion function.
   (text-mode-ispell-word-completion nil)
@@ -642,20 +636,6 @@
   (which-key-sort-order 'which-key-key-order-alpha)
   (which-key-idle-delay 0.5)
   :hook (after-init . which-key-mode))
-
-(use-package wingman
-  :vc (:url "https://github.com/mjrusso/wingman/" :rev newest)
-  :general
-  (:keymaps 'spc-map
-   "w" '("wingman" . global-wingman-mode))
-  (:keymaps 'wingman-mode-completion-transient-map
-   "f" 'wingman-accept-full
-   "l" 'wingman-accept-line
-   "w" 'wingman-accept-word)
-  :custom
-  (wingman-prefix-key nil)
-  (wingman-auto-fim nil)
-  (wingman-llama-endpoint "http://127.0.0.1:3000/upstream/qwen3.8-27b:coding/infill"))
 
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
