@@ -522,8 +522,9 @@
   :init (marginalia-mode 1))
 
 (use-package markdown-mode
-  :mode ("\\.md\\'" . markdown-mode)
-  :mode ("\\.markdown\\'" . markdown-mode))
+  :mode ("\\.md\\'" . gfm-mode)
+  :mode ("\\.markdown\\'" . gfm-mode)
+  :custom (markdown-fontify-code-blocks-natively 't))
 
 (use-package mixed-pitch
   :hook
