@@ -80,29 +80,6 @@
       (user-error "Line %d is not committed yet" line))
     (magit-show-commit hash)))
 
-(use-package agent-shell
-  :after evil
-  :commands (agent-shell)
-  :config
-
-  (evil-define-key 'insert agent-shell-mode-map (kbd "RET") #'newline)
-  (evil-define-key 'normal agent-shell-mode-map (kbd "RET") #'comint-send-input)
-
-  (add-hook 'diff-mode-hook
-            (lambda ()
-              (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-                (evil-emacs-state))))
-
-  (defun jv/agent-shell-dot-subdir (subdir)
-    (let* ((cwd (string-remove-suffix "/" (agent-shell-cwd)))
-           (sanitized (replace-regexp-in-string "/" "-" (string-remove-prefix "/" cwd))))
-      (expand-file-name subdir (locate-user-emacs-file (concat "agent-shell/" sanitized)))))
-  (setopt agent-shell-dot-subdir-function #'jv/agent-shell-dot-subdir)
-
-  (when (string= (system-name) "juris-work-laptop")
-    (setopt agent-shell-preferred-agent-config
-            (agent-shell-anthropic-make-claude-code-config))))
-
 (use-package all-the-icons)
 
 (use-package atomic-chrome
