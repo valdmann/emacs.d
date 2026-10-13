@@ -62,6 +62,24 @@
       (wingman-fim)
     (completion-at-point)))
 
+(defun jv/blamer-show-commit ()
+  "Visit in Magit the revision that blamer annotates at point."
+  (interactive)
+  (require 'magit)
+  (let* ((file (jv/buffer-path))
+         (line (line-number-at-pos))
+         (res (magit-with-toplevel
+               (magit-git-string "blame" "-L" (format "%d,%d" line line)
+                                 "--porcelain" "--" file)))
+         (hash (and res (save-match-data
+                          (and (string-match (rx line-start (= 40 hex)) res)
+                               (match-string 0 res))))))
+    (unless hash
+      (user-error "No blame info for line %d" line))
+    (when (string= hash (make-string 40 ?0))
+      (user-error "Line %d is not committed yet" line))
+    (magit-show-commit hash)))
+
 (use-package agent-shell
   :after evil
   :commands (agent-shell)
@@ -507,7 +525,8 @@
   :bind
   (:map evil-normal-state-map
    ("g m m" . magit)
-   ("g m b" . magit-blame))
+   ("g m b" . magit-blame)
+   ("g m s" . jv/blamer-show-commit))
   :config
   (require 'all-the-icons)
   (setopt magit-format-file-function #'magit-format-file-all-the-icons)
