@@ -64,7 +64,9 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+        ("melpa-snapshots" . "https://snapshots.melpa.org/packages/")))
+(setq package-pinned-packages
+      '((evil . "melpa-snapshots")))
 (package-initialize)
 
 ;; Install missing packages by default.

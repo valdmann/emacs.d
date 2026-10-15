@@ -83,7 +83,6 @@
 (use-package all-the-icons)
 
 (use-package atomic-chrome
-  :vc (:url "https://github.com/KarimAziev/atomic-chrome" :rev newest)
   :commands (atomic-chrome-start-server)
   :config (atomic-chrome-start-server))
 
@@ -282,7 +281,6 @@
   (display-line-numbers-width-start 't))
 
 (use-package doom-modeline
-  :vc (:url "https://github.com/seagle0128/doom-modeline" :rev newest)
   :custom
   (doom-modeline-buffer-file-name-style 'truncate-except-project)
   (doom-modeline-column-zero-based nil)
@@ -298,7 +296,6 @@
                '(ghostel-mode nerd-icons-faicon "nf-fa-terminal" :face nerd-icons-lblue)))
 
 (use-package dtrt-indent
-  :vc (:url "https://github.com/jscheid/dtrt-indent" :rev newest)
   :hook (after-init . dtrt-indent-global-mode))
 
 (use-package dumb-jump
@@ -437,9 +434,6 @@
   (evil-collection-setup-minibuffer t))
 
 (use-package evil-ghostel
-  :vc (:url "https://github.com/dakra/ghostel"
-       :lisp-dir "extensions/evil-ghostel"
-       :rev :newest)
   :after (ghostel evil)
   :hook (ghostel-mode . evil-ghostel-mode))
 
@@ -449,9 +443,6 @@
             "C-w E" #'ff-find-other-file-other-window))
 
 (use-package ghostel
-  :vc (:url "https://github.com/dakra/ghostel"
-       :lisp-dir "lisp"
-       :rev :newest)
   :general
   (:keymaps 'spc-map
    "t" '("terminal" . jv/terminal)
@@ -552,7 +543,6 @@
     :innermodes '(poly-erb-innermode)))
 
 (use-package project-x
-  :vc (:url "https://github.com/vmargb/project-x" :rev newest)
   :after project
   :config
   (add-hook 'project-find-functions 'project-x-try-local 90))
@@ -581,8 +571,7 @@
 (use-package server
   :config (unless (server-running-p) (server-mode)))
 
-(use-package shell-maker
-  :vc (:url "https://github.com/xenodium/shell-maker" :rev newest))
+(use-package shell-maker)
 
 (use-package tramp
   :defer t
