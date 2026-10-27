@@ -4,6 +4,13 @@
 
 (declare-function treesit-parser-create "treesit.c")
 
+(add-to-list
+ 'treesit-language-source-alist
+ '(jinja "https://github.com/cathaysia/tree-sitter-jinja"
+         :revision "master"
+         :source-dir "tree-sitter-jinja/src")
+ t)
+
 (defvar jinja-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?#  "<"  table)
@@ -133,7 +140,8 @@
   "Major mode for editing Jinja2 templates, powered by tree-sitter."
   :group 'jinja
 
-  (when (treesit-ready-p 'jinja)
+  (when (and (treesit-ensure-installed 'jinja)
+             (treesit-ready-p 'jinja))
     (setq treesit-primary-parser (treesit-parser-create 'jinja))
 
     ;; Comments: {# ... #}

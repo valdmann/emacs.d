@@ -103,7 +103,8 @@
   :hook (after-init . global-clipetty-mode))
 
 (use-package cmake-ts-mode
-  :mode ("CMakeLists\\.txt\\'" . cmake-ts-mode)
+  :ensure nil
+  :defer t
   :custom
   (cmake-ts-mode-indent-offset 4))
 
@@ -184,7 +185,8 @@
   (global-corfu-mode))
 
 (use-package c-ts-mode
-  :defer t
+  :ensure nil
+  :mode ("\\.cppm\\'" . c++-ts-mode)
   :custom
   (c-ts-mode-indent-offset 4))
 
@@ -321,7 +323,7 @@
 (use-package eglot
   :config
   :init
-  (add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'python-base-mode-hook 'eglot-ensure)
   :general
   (:keymaps 'spc-lsp-map
    "d" '("definition" . xref-find-definitions)
@@ -484,9 +486,6 @@
 (use-package jinx
   :hook (emacs-startup . global-jinx-mode))
 
-(use-package lua-mode
-  :mode ("\\.lua\\'" . lua-mode))
-
 (use-package magit
   :defer t
   :commands (magit-add-section-hook)
@@ -516,9 +515,11 @@
 
 (use-package markdown-ts-mode
   :ensure nil
-  :demand t
   :mode ("\\.md\\'" . markdown-ts-mode)
-  :mode ("\\.markdown\\'" . markdown-ts-mode))
+  :mode ("\\.markdown\\'" . markdown-ts-mode)
+  :config
+  (require 'yaml-ts-mode)
+  (treesit-ensure-installed 'yaml))
 
 (use-package mixed-pitch
   :hook
@@ -569,9 +570,6 @@
   :load-path "lisp/"
   :bind (("C-c c" . review-captions)))
 
-(use-package rust-mode
-  :mode ("\\.rs\\'" . rust-mode))
-
 (use-package savehist
   :hook (after-init . savehist-mode))
 
@@ -587,30 +585,9 @@
 
 (use-package treesit
   :ensure nil
-  :mode (("\\.tsx\\'" . tsx-ts-mode)
-         ("\\.cppm\\'" . c++-ts-mode)
-         ("\\.ts\\'" . typescript-ts-mode))
-  :config
-  (setq treesit-language-source-alist
-        '((c "https://github.com/tree-sitter/tree-sitter-c")
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (ruby "https://github.com/tree-sitter/tree-sitter-ruby")
-          (cmake "https://github.com/uyha/tree-sitter-cmake")
-          (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-          (groovy "https://github.com/murtaza64/tree-sitter-groovy")
-          (yaml "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
-          (jinja "https://github.com/cathaysia/tree-sitter-jinja" "master" "tree-sitter-jinja/src")))
-  (setq major-mode-remap-alist
-        '((c-mode . c-ts-mode)
-          (c++-mode . c++-ts-mode)
-          (ruby-mode . ruby-ts-mode)))
-  (add-hook 'after-init-hook
-    (lambda ()
-      (dolist (grammar treesit-language-source-alist)
-        (let ((lang (car grammar)))
-          (unless (treesit-language-available-p lang)
-            (treesit-install-language-grammar lang)))))))
+  :custom
+  (treesit-auto-install-grammar 'always)
+  (treesit-enabled-modes t))
 
 (use-package vertico
   :init (vertico-mode 1))
@@ -639,9 +616,6 @@
 
 (use-package ws-butler
   :hook (prog-mode . ws-butler-mode))
-
-(use-package yaml-ts-mode
-  :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 (add-hook 'after-init-hook
           (lambda ()
