@@ -1,8 +1,10 @@
 ;; -*- lexical-binding: t -*-
 
 (define-prefix-command 'spc-map)
+(define-prefix-command 'spc-kill-map)
 (define-prefix-command 'spc-lsp-map)
 (define-prefix-command 'spc-note-map)
+(keymap-set spc-map "k" '("kill" . spc-kill-map))
 (keymap-set spc-map "l" '("lsp" . spc-lsp-map))
 (keymap-set spc-map "n" '("note" . spc-note-map))
 
@@ -49,8 +51,6 @@
   (interactive)
   (jv/kill-location (jv/project-buffer-path)))
 
-(define-prefix-command 'spc-kill-map)
-(keymap-set spc-map "k" '("kill" . spc-kill-map))
 (keymap-set spc-kill-map "f" '("file (project)" . jv/kill-project-file))
 (keymap-set spc-kill-map "F" '("file (absolute)" . jv/kill-file))
 (keymap-set spc-kill-map "l" '("line (project)" . jv/kill-project-line))
@@ -213,6 +213,12 @@
   :config
   (denote-rename-buffer-mode 1)
 
+  (defun jv/browse-denote-url (_url &rest _)
+    "Open the Denote note linked at point."
+    (denote-link-open-at-point))
+
+  (add-to-list 'browse-url-handlers '("\\`denote:" . jv/browse-denote-url))
+
   (defun jv/jump-to-recent ()
     "Jump to one of the recently modified Denote notes."
     (interactive)
@@ -286,7 +292,7 @@
   (doom-modeline-column-zero-based nil)
   (doom-modeline-percent-position '(-3 "%o"))
   (doom-modeline-enable-word-count t)
-  (doom-modeline-continuous-word-count-modes '(markdown-mode org-mode))
+  (doom-modeline-continuous-word-count-modes '(markdown-ts-mode org-mode))
   (doom-modeline-buffer-encoding nil)
   (doom-modeline-total-line-number t)
   (doom-modeline-vcs-max-length 32)
@@ -508,10 +514,17 @@
          ("M-A" . marginalia-cycle))
   :init (marginalia-mode 1))
 
-(use-package markdown-mode
-  :mode ("\\.md\\'" . gfm-mode)
-  :mode ("\\.markdown\\'" . gfm-mode)
-  :custom (markdown-fontify-code-blocks-natively 't))
+(use-package markdown-ts-appear
+  :hook (markdown-ts-mode . markdown-ts-appear-mode)
+  :custom
+  (markdown-ts-appear-diagram-renderers
+   '(("mermaid" . markdown-ts-appear-diagram-mmdc))))
+
+(use-package markdown-ts-mode
+  :ensure nil
+  :demand t
+  :mode ("\\.md\\'" . markdown-ts-mode)
+  :mode ("\\.markdown\\'" . markdown-ts-mode))
 
 (use-package mixed-pitch
   :hook
@@ -648,8 +661,7 @@
   :hook (prog-mode . ws-butler-mode))
 
 (use-package yaml-ts-mode
-  :mode ("\\.ya?ml\\'" . yaml-ts-mode)
-  :load-path "lisp/")
+  :mode ("\\.ya?ml\\'" . yaml-ts-mode))
 
 (add-hook 'after-init-hook
           (lambda ()
