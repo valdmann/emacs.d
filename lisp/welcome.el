@@ -18,15 +18,10 @@
   'face nil
   'follow-link t)
 
-(defun welcome--project-roots ()
-  "Return known project roots, excluding ELPA package directories."
-  (cl-remove-if (lambda (r) (string-match-p "/elpa/" r))
-                (project-known-project-roots)))
-
 (defun welcome--recent-projects ()
   "Return recent projects ordered by recency of file access.
 Derived from `recentf-list' matched against known project roots."
-  (let ((roots (welcome--project-roots))
+  (let ((roots (project-known-project-roots))
         (projects nil))
     (dolist (f (welcome--recent-files))
       (let* ((abbrev (abbreviate-file-name f))
@@ -94,10 +89,10 @@ Measurements are taken using window WIN."
         (forward-line 1)))
     max-w))
 
-(defun welcome--recenter ()
+(defun welcome--recenter (&optional win)
   "Center the welcome buffer content in its window."
   (when-let* ((buf (get-buffer "*welcome*"))
-              (win (get-buffer-window buf))
+              (win (or win (get-buffer-window buf)))
               (ov (buffer-local-value 'welcome--padding-overlay buf)))
     (with-current-buffer buf
       (let ((inhibit-read-only t))
@@ -116,22 +111,12 @@ Measurements are taken using window WIN."
           (put-text-property (point-min) (point-max) 'line-prefix prefix)
           (put-text-property (point-min) (point-max) 'wrap-prefix prefix))))))
 
-(defun welcome--on-frame-size-change (frame)
-  "Re-center welcome buffer when FRAME is resized."
-  (when (get-buffer-window "*welcome*" frame)
-    (welcome--recenter)))
-
 (define-derived-mode welcome-mode special-mode "Welcome"
   "Major mode for the welcome screen."
   (setq-local global-hl-line-mode nil)
   (setq-local evil-normal-state-cursor '(nil))
   (setq welcome--padding-overlay (make-overlay (point-min) (point-min)))
-  (add-hook 'window-size-change-functions #'welcome--on-frame-size-change)
-  (add-hook 'kill-buffer-hook
-            (lambda ()
-              (remove-hook 'window-size-change-functions
-                           #'welcome--on-frame-size-change))
-            nil t))
+  (add-hook 'window-size-change-functions #'welcome--recenter nil t))
 
 (defun welcome-buffer ()
   "Create and return the *welcome* buffer."
@@ -140,7 +125,7 @@ Measurements are taken using window WIN."
       (when welcome--padding-overlay
         (delete-overlay welcome--padding-overlay))
       (let ((inhibit-read-only t)
-            (project-roots (welcome--project-roots)))
+            (project-roots (project-known-project-roots)))
         (erase-buffer)
         (insert (propertize (format "Emacs %s" emacs-version)
                             'face '(:height 1.5 :weight bold))

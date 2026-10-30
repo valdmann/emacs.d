@@ -59,7 +59,8 @@
 
 ;; Set up package manager.
 (require 'package)
-(setq package-native-compile t)
+(setq package-native-compile t
+      package-vc-register-as-project nil)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")

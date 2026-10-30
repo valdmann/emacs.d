@@ -339,7 +339,7 @@
 
 (use-package emacs
   :bind
-  (("C-<mouse-1>" . xref-find-definitions-at-mouse)
+  (("C-<down-mouse-3>" . ignore)
    ("C-<mouse-3>" . evil-jump-backward)
    ("C-s" . save-buffer)
    ("C-<return>" . completion-at-point))
@@ -371,7 +371,8 @@
    (emacs-lisp-mode-hook . (lambda () (setq-local lisp-indent-function
                                                   #'emacs-lisp-indent-function))))
   :init
-  (global-completion-preview-mode 1))
+  (global-completion-preview-mode 1)
+  (global-xref-mouse-mode 1))
 
 (use-package emacs-lisp-indent-function
   :load-path "lisp/"
@@ -544,6 +545,11 @@
   (define-polymode poly-json+erb-mode poly-json-root-polymode
     :innermodes '(poly-erb-innermode)))
 
+(use-package project
+  :ensure nil
+  :custom
+  (project-list-exclude '("/elpa/")))
+
 (use-package project-x
   :after project
   :config
@@ -553,12 +559,14 @@
   :mode "\\.proto\\'")
 
 (use-package recentf
+  :ensure nil
   :custom
   (recentf-max-saved-items 1024)
+  (recentf-autosave-interval 300)
+  (recentf-show-messages nil)
   :hook (after-init . recentf-mode)
   :config
-  (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:")
-  (run-at-time nil (* 5 60) 'recentf-save-list))
+  (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:"))
 
 (use-package review-captions
   :load-path "lisp/"
