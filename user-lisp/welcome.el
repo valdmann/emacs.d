@@ -118,6 +118,7 @@ Measurements are taken using window WIN."
   (setq welcome--padding-overlay (make-overlay (point-min) (point-min)))
   (add-hook 'window-size-change-functions #'welcome--recenter nil t))
 
+;;;###autoload
 (defun welcome-buffer ()
   "Create and return the *welcome* buffer."
   (let ((buf (get-buffer-create "*welcome*")))

@@ -3,8 +3,11 @@
 (require 'dash)
 (require 'transient)
 
-(defconst revcap-image-extensions '("png" "jpg" "webp"))
-(defconst revcap-caption-extension "txt")
+(declare-function image-transform-fit-to-window "image-mode")
+
+(eval-and-compile
+  (defconst revcap-image-extensions '("png" "jpg" "webp"))
+  (defconst revcap-caption-extension "txt"))
 (defconst revcap-marked-file-name "MARKED")
 
 (defconst revcap-image-regexp
@@ -32,7 +35,8 @@
   "Indicates the in-memory state may have diverged from disk.")
 
 (defvar revcap-exclude-uncaptioned nil
-  "If true, ignore images without existing caption files. Otherwise, create missing caption files.")
+  "If true, ignore images without existing caption files.
+Otherwise, create missing caption files.")
 
 (defun revcap-reset ()
   "Reset global state."
@@ -262,7 +266,7 @@
       "Unmark"
     "Mark"))
 
-;;;###autoload
+;;;###autoload (autoload 'review-captions "review-captions" nil t)
 (transient-define-prefix review-captions ()
   "Transient menu for caption review."
   [["Images"

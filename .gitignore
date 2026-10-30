@@ -1,4 +1,5 @@
 *.elc
+.user-lisp-autoloads.el
 
 /auto-save-list
 /custom.el*

@@ -374,10 +374,6 @@
   (global-completion-preview-mode 1)
   (global-xref-mouse-mode 1))
 
-(use-package emacs-lisp-indent-function
-  :load-path "lisp/"
-  :autoload emacs-lisp-indent-function)
-
 (use-package embark
   :bind
   (("C-." . embark-act)
@@ -467,7 +463,7 @@
   :defer t)
 
 ;; (use-package groovy-ts-mode
-;;   :load-path "lisp/")
+;;   :ensure nil)
 
 (use-package indent-bars
   :hook (prog-mode . indent-bars-mode)
@@ -475,7 +471,7 @@
   (require 'indent-bars-ts))
 
 (use-package jinja-ts-mode
-  :load-path "lisp/"
+  :ensure nil
   :mode "\\.jinja\\'")
 
 (use-package jinx
@@ -569,7 +565,7 @@
   (add-to-list 'recentf-exclude "^/\\(?:su\\|sudo\\)?:"))
 
 (use-package review-captions
-  :load-path "lisp/"
+  :ensure nil
   :bind (("C-c c" . review-captions)))
 
 (use-package savehist
@@ -604,8 +600,8 @@
   :hook (text-mode . soft-wrap-mode))
 
 (use-package welcome
-  :load-path "lisp/"
-  :config
+  :ensure nil
+  :init
   (setq initial-buffer-choice #'welcome-buffer))
 
 (use-package which-key
