@@ -106,7 +106,7 @@
   :ensure nil
   :defer t
   :custom
-  (cmake-ts-mode-indent-offset 4))
+  (cmake-ts-indent-offset 4))
 
 (use-package consult
   :bind (;; C-c bindings in `mode-specific-map'
@@ -188,7 +188,7 @@
   :ensure nil
   :mode ("\\.cppm\\'" . c++-ts-mode)
   :custom
-  (c-ts-mode-indent-offset 4))
+  (c-ts-indent-offset 4))
 
 (use-package dash
   :config (global-dash-fontify-mode 1))
@@ -225,9 +225,6 @@
       :sort nil
       :require-match t
       :category 'file
-      :annotate (lambda (f)
-                  (format "  %s"
-                          (date-relative-format (file-modification-time f))))
       :state (consult--file-preview)
       :history 'file-name-history))))
 
@@ -321,7 +318,6 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain))
 
 (use-package eglot
-  :config
   :init
   (add-hook 'python-base-mode-hook 'eglot-ensure)
   :general
@@ -475,8 +471,6 @@
 (use-package indent-bars
   :hook (prog-mode . indent-bars-mode)
   :config
-  (when (version< emacs-version "30")
-    (setq indent-bars-prefer-character t))
   (require 'indent-bars-ts))
 
 (use-package jinja-ts-mode
@@ -535,7 +529,7 @@
   :defer t
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :hook (pdf-view-mode . (lambda ()
-                           (set (make-local-variable 'evil-emacs-state-cursor) (list nil))))
+                           (setq-local evil-emacs-state-cursor (list nil))))
   :config
   (pdf-loader-install))
 
@@ -576,12 +570,11 @@
 (use-package server
   :config (unless (server-running-p) (server-mode)))
 
-(use-package shell-maker)
-
 (use-package tramp
+  :ensure nil
   :defer t
-  :init
-  (setq tramp-use-ssh-controlmaster-options nil))
+  :custom
+  (tramp-use-connection-share nil))
 
 (use-package treesit
   :ensure nil
@@ -608,6 +601,7 @@
   (setq initial-buffer-choice #'welcome-buffer))
 
 (use-package which-key
+  :ensure nil
   :custom
   (which-key-sort-uppercase-first nil)
   (which-key-sort-order 'which-key-key-order-alpha)

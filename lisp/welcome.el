@@ -5,6 +5,8 @@
 (require 'denote)
 
 (defvar magit-display-buffer-function)
+(declare-function magit-display-buffer-same-window-except-diff-v1 "magit-mode")
+(declare-function magit-status-setup-buffer "magit-status")
 
 (defvar welcome-recent-projects-limit 5)
 (defvar welcome-recent-files-limit 10)
@@ -28,7 +30,7 @@ Derived from `recentf-list' matched against known project roots."
         (projects nil))
     (dolist (f (welcome--recent-files))
       (let* ((abbrev (abbreviate-file-name f))
-             (match (cl-find-if (lambda (r) (string-prefix-p r abbrev)) roots)))
+             (match (seq-find (lambda (r) (string-prefix-p r abbrev)) roots)))
         (when (and match (not (member match projects)))
           (push match projects))))
     (nreverse projects)))
@@ -53,7 +55,7 @@ Derived from `recentf-list' matched against known project roots."
                               (if (file-directory-p (expand-file-name ".git" path))
                                   (let ((magit-display-buffer-function
                                          #'magit-display-buffer-same-window-except-diff-v1))
-                                    (magit-status path))
+                                    (magit-status-setup-buffer path))
                                 (dired path))))
     (insert "\n")))
 
@@ -63,7 +65,7 @@ If PATH is inside a known project, the project name is also highlighted."
   (let* ((abbrev (abbreviate-file-name path))
          (name (file-name-nondirectory abbrev))
          (dir (file-name-directory abbrev))
-         (root (cl-find-if (lambda (r) (string-prefix-p r abbrev)) project-roots))
+         (root (seq-find (lambda (r) (string-prefix-p r abbrev)) project-roots))
          (root-parent (and root (file-name-directory (directory-file-name root))))
          (project-name (and root (file-name-nondirectory (directory-file-name root))))
          (rest-of-dir (and root (string-remove-prefix root dir))))

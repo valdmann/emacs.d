@@ -4,6 +4,11 @@
 
 (require 'treesit)
 
+(add-to-list
+ 'treesit-language-source-alist
+ '(groovy "https://github.com/murtaza64/tree-sitter-groovy")
+ t)
+
 (defcustom groovy-ts-mode-indent-offset 4
   "Number of spaces for each indentation step in `groovy-ts-mode'."
   :type 'integer
@@ -70,7 +75,7 @@
      (continue) @font-lock-keyword-face
      ;; enum, trait, throw, var are parsed as identifiers by this grammar
      ((identifier) @font-lock-keyword-face
-      (:match "\\`\\(?:enum\\|trait\\|throw\\|var\\|implements\\)\\'" @font-lock-keyword-face)))
+      (:match? "\\`\\(?:enum\\|trait\\|throw\\|var\\|implements\\)\\'" @font-lock-keyword-face)))
 
    :language 'groovy
    :feature 'string
@@ -157,7 +162,8 @@
   :group 'groovy
   :syntax-table groovy-ts-mode--syntax-table
 
-  (when (treesit-ready-p 'groovy)
+  (when (and (treesit-ensure-installed 'groovy)
+             (treesit-ready-p 'groovy))
     (treesit-parser-create 'groovy)
 
     (setq-local comment-start "// ")

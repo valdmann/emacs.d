@@ -36,7 +36,6 @@
 (blink-cursor-mode -1)
 (global-hl-line-mode 1)
 (pixel-scroll-precision-mode 1)
-(xterm-mouse-mode 1)
 (column-number-mode)
 
 ;; Use only the buffer name as the title of the frame.
@@ -48,10 +47,10 @@
 (fset 'display-startup-echo-area-message 'ignore)
 
 ;; Yes/no -> Y/n.
-(fset 'yes-or-no-p 'y-or-n-p)
+(setq use-short-answers t)
 
-;; Suppress warnings from native compiler.
-(setq native-comp-async-report-warnings-errors nil)
+;; Suppress warnings popup from native compiler.
+(setq native-comp-async-report-warnings-errors 'silent)
 
 ;; Don't let customize write to init.el!
 (setq custom-file (in-config-directory "custom.el"))
