@@ -181,6 +181,8 @@
   )
 
 (use-package corfu
+  :custom
+  (completion-preview-sort-function #'corfu-sort-length-alpha)
   :init
   (global-corfu-mode))
 
@@ -596,7 +598,8 @@
   (defun soft-wrap-mode ()
     (interactive)
     (visual-line-mode 'toggle)
-    (visual-fill-column-mode 'toggle))
+    (visual-fill-column-mode 'toggle)
+    (visual-wrap-prefix-mode 'toggle))
   :hook (text-mode . soft-wrap-mode))
 
 (use-package welcome
