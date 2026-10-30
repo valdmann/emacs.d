@@ -368,8 +368,13 @@
   (minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
   ;; Use English month and day-of-week names in org-mode.
   (system-time-locale "C")
+  ;; Semantic highlighting in Emacs Lisp.
+  (elisp-fontify-semantically t)
+  ;; Trust config files for macro expansion and Flymake byte-compilation.
+  (trusted-content '("~/.config/emacs/"))
   :hook
   ((minibuffer-setup-hook . cursor-intangible-mode)
+   (emacs-lisp-mode-hook . cursor-sensor-mode)
    (emacs-lisp-mode-hook . (lambda () (setq-local lisp-indent-function
                                                   #'emacs-lisp-indent-function))))
   :init
@@ -588,6 +593,10 @@
 
 (use-package server
   :config (unless (server-running-p) (server-mode)))
+
+(use-package shortdoc
+  :ensure nil
+  :hook (help-fns-describe-function-functions . shortdoc-help-fns-examples-function))
 
 (use-package tramp
   :ensure nil
