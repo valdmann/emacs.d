@@ -319,6 +319,10 @@
   (ediff-split-window-function 'split-window-horizontally)
   (ediff-window-setup-function 'ediff-setup-windows-plain))
 
+(use-package editorconfig
+  :ensure nil
+  :hook (after-init . editorconfig-mode))
+
 (use-package eglot
   :init
   (add-hook 'python-base-mode-hook 'eglot-ensure)
@@ -372,6 +376,8 @@
   (elisp-fontify-semantically t)
   ;; Trust config files for macro expansion and Flymake byte-compilation.
   (trusted-content '("~/.config/emacs/"))
+  ;; Update terminal cursor shape and color (e.g. for Evil states).
+  (xterm-update-cursor t)
   :hook
   ((minibuffer-setup-hook . cursor-intangible-mode)
    (emacs-lisp-mode-hook . cursor-sensor-mode)
@@ -626,6 +632,7 @@
 
 (use-package welcome
   :ensure nil
+  :defer t
   :init
   (setq initial-buffer-choice #'welcome-buffer))
 

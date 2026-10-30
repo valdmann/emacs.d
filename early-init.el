@@ -16,8 +16,9 @@
   (unless (file-exists-p directory)
     (make-directory directory)))
 
-;; Don't load outdated bytecode.
-(setq load-prefer-newer t)
+;; Don't load outdated bytecode, and cache load-path directory listings.
+(setq load-prefer-newer t
+      load-path-filter-function #'load-path-filter-cache-directory-files)
 
 ;; Disable slow resize when changing fonts.
 (setq frame-inhibit-implied-resize t)
@@ -68,6 +69,8 @@
 (setq package-pinned-packages
       '((evil . "melpa-snapshots")))
 (package-initialize)
+(when noninteractive
+  (prepare-user-lisp t))
 
 ;; Install missing packages by default.
 (require 'use-package)
