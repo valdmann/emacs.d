@@ -439,6 +439,12 @@
             "C-w e" #'ff-find-other-file
             "C-w E" #'ff-find-other-file-other-window))
 
+(use-package flymake
+  :ensure nil
+  :defer t
+  :custom
+  (flymake-show-diagnostics-at-end-of-line 'fancy))
+
 (use-package ghostel
   :general
   (:keymaps 'spc-map
@@ -463,6 +469,12 @@
 
 (use-package git-auto-commit-mode
   :defer t)
+
+(use-package grep
+  :ensure nil
+  :defer t
+  :custom
+  (grep-use-headings t))
 
 ;; (use-package groovy-ts-mode
 ;;   :ensure nil)
@@ -546,6 +558,7 @@
 (use-package project
   :ensure nil
   :custom
+  (project-file-history-behavior 'relativize)
   (project-list-exclude '("/elpa/")))
 
 (use-package project-x
